@@ -83,8 +83,6 @@
 
     });
 
-    new DataTable('#example');
-
     $(document).ready(function() {
         // On Click
         $('.qty, .unit_price').on('change', function() {
