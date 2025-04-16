@@ -1,25 +1,37 @@
 @extends('layouts.admin')
 
+@section('breadcrumb')
+<section class="content-header">
+    <h1>
+        Dashboard
+        <small>Control panel</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Create New Bid</li>
+    </ol>
+</section>
+@endsection
+
 @section('content')
-<div>
-    <div class="mt-auto p-2">
-       <b>>>Add New Bid</b>
-    </div>
-    <form method="POST" action="{{ url('/createBid')}}">
-        <div class="row mb-3">
-            <label for="inputOldPin" class="col-sm-2 col-form-label">Ref ID</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="ref_id" required>
+<section class="content">
+      <div class="row">
+        <!-- left column -->
+        <div class="col-md-12">
+          <!-- general form elements -->
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Bid Creation</h3>
             </div>
-        </div>
-        <div class="row mb-3">
-            <label for="address" class="col-sm-2 col-form-label">Address</label>
-            <div class="col-sm-10">
-                <textarea class="form-control" name="address" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="table-responsive">
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form method="POST" action="{{ url('/createBid')}}">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Address</label>
+                  <textarea class="form-control" name="address" rows="2" required></textarea>
+                </div>
+                <div class="form-group">
                 <table class="table" id="serviceTable">
                     <thead class="table-light">
                         <tr>
@@ -68,16 +80,39 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+                </div>
+                
+              </div>
+              <!-- /.box-body -->
 
+              <div class="box-footer">
+                @csrf
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.box -->
         </div>
-
-        <div class="row mb-3">
-            <div class="col-sm-10">
-            @csrf
-            <button type="submit" class="btn btn-primary">SAVE</button>
-            </div>
-        </div>
-    </form>
-</div>
+       
+      </div>
+      <!-- /.row -->
+    </section>
 @endsection
+
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        // On Click
+        $('.qty, .unit_price').on('change', function() {
+            const row = $(this).closest('tr');
+            //const qty = parseFloat(row.find('.qty').val()) || 0;
+
+            const qty = parseFloat(row.find('.qty').val().replace(/[^0-9.]/g, '')) || 0;
+            const unit_price = parseFloat(row.find('.unit_price').val().replace(/[^0-9.]/g, '')) || 0;
+            const total = qty * unit_price;
+            row.find('.row-total').html('$' + total.toFixed(2));
+        });
+
+    });
+</script>
+@endpush

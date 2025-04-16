@@ -31,7 +31,7 @@ class HomeController extends Controller
 
     public function manageBids()
     {
-        $data['bids'] =  DB::Table('bids')->get();
+        $data['bids'] =  DB::Table('bids')->where('user_id', Auth::user()->id)->get();
         return view('admin/manage_bids', ['data' => $data]);
     }
 
@@ -40,7 +40,6 @@ class HomeController extends Controller
         if ($request->isMethod('post')) {
             $bid_id = DB::table('bids')->insertGetId([
                 'user_id' => Auth::user()->id,
-                'ref_id' => $request->input('ref_id'),
                 'address' => $request->input('address'),
             ]);
 
@@ -48,13 +47,14 @@ class HomeController extends Controller
             $service_descriptions = $request->input('service_description');
             $unit_prices = $request->input('unit_price');
             $qtys = $request->input('qty');
+           
 
             for ($i = 0; $i < count($service_descriptions); $i++) {
                 DB::table('bid_details')->insert([
                     'bid_id' => $bid_id,
-                    'qty' => $qtys[$i],
+                    'qty' => (int) $qtys[$i],
                     'service_description' => $service_descriptions[$i],
-                    'unit_price' => $unit_prices[$i],
+                    'unit_price' => number_format((float) $unit_prices[$i], 2, '.', ''),
                 ]);
             }
 
@@ -74,8 +74,18 @@ class HomeController extends Controller
             if ($request->new_pin !=  $request->confirm_pin) {
                 return redirect()->back()->with('error', 'New PIN and Confirm PIN does not match.');
             }
+
+            if ($request->old_pin == $request->new_pin) {
+                return redirect()->back()->with('error', 'Old PIN and New PIN is same.');
+            }
+
             //change password here.
-            //return redirect()->back()->with('success', 'Updated Successfully.');
+            DB::Table('users')->where('id', Auth::user()->id)
+            ->update([
+                'pin' => $request->new_pin,
+            ]);
+
+            return redirect()->back()->with('success', 'Updated Successfully.');
         }
 
         return view('admin/change_pin');

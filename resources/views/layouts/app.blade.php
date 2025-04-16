@@ -37,8 +37,42 @@
             background-color: #176B35;
         }
 
-        info
+        .table-wrapper {
+            width: 90%;
+            margin: 30px auto;
+            font-family: Arial, sans-serif;
+        }
+
+        .table-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .table {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .cell {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .header {
+            background-color: #f1f1f1;
+            font-weight: bold;
+        }
     </style>
+
 </head>
 
 <body>
@@ -59,35 +93,16 @@
                     </ul>
 
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
+                    <!-- <ul class="navbar-nav ms-auto">
+                       
                         @guest
                         @if (Route::has('login'))
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">Worker Login</a>
                         </li>
                         @endif
-
-                        @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }}
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
                         @endguest
-                    </ul>
+                    </ul> -->
                 </div>
             </div>
         </nav>

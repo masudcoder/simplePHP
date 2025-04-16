@@ -7,47 +7,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        .jumbotron {
-            padding: 20px 5px;
+        .navbar, .btn-login {
+            background-color: #367fa9;
+            color:#fff;
         }
 
-        .bg-grey {
-            background-color: #f6f6f6;
-        }
-
+        
         .container-fluid {
             padding: 60px 50px;
         }
 
-        .logo-small {
-            color: #f4511e;
-            font-size: 50px;
-        }
-
-        .logo {
-            color: #f4511e;
-            font-size: 200px;
-        }
-
-        .offer-info {
-            padding: 0 0 20px 0;
-        }
-
-        .footer-bg {
-            background-color: #176B35;
-        }
-
-        info
     </style>
 </head>
 
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
                     Tree care
-                </a>
+                
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -64,7 +42,7 @@
                         @guest
                         @if (Route::has('login'))
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Worker Login</a>
+                        Worker Login
                         </li>
                         @endif
 
@@ -107,7 +85,7 @@
                                         <label for="pin" class="col-md-4 col-form-label text-md-end">PIN</label>
 
                                         <div class="col-md-6">
-                                            <input id="pin" type="text" class="form-control @error('pin') is-invalid @enderror" name="pin" value="{{ old('pin') }}" required autofocus>
+                                            <input id="pin" type="password" class="form-control @error('pin') is-invalid @enderror" name="pin" value="{{ old('pin') }}" required autofocus>
                                             @error('pin')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -123,7 +101,7 @@
 
                                     <div class="row mb-0">
                                         <div class="col-md-8 offset-md-4">
-                                            <button type="submit" class="btn btn-primary">
+                                            <button type="submit" class="btn btn-login">
                                                 {{ __('Login') }}
                                             </button>
                                         </div>
