@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::any('/', [App\Http\Controllers\LandingPageController::class, 'index']);
+Route::any('/submitBid', [App\Http\Controllers\LandingPageController::class, 'submitBid'])->name('submitBid');
 
 Auth::routes();
 

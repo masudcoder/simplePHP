@@ -25,4 +25,10 @@ class LandingPageController extends Controller
         }
         return view('welcome', ['data' => $data]);
     }
+
+    public function submitBid(Request $request) {
+        DB::Table('bids')->where('id', $request->id) ->update(['status' => $request->action]);
+        return redirect('/')->with('success', 'Thank you, We\'ll contact you later.');
+
+    }
 }

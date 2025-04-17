@@ -14,7 +14,7 @@
         footer {
             position: fixed;
             bottom: 0;
-            margin:10px 0 0 0 ;
+            margin: 10px 0 0 0;
             width: 100%;
             background-color: #176B35;
             padding: 10px 0;
@@ -24,7 +24,7 @@
 
         .company-name {
             padding: 0 0 8px 0;
-            margin:0 0 8px 0;
+            margin: 0 0 8px 0;
             font-weight: bold;
             font-size: 20px;
         }
@@ -40,7 +40,7 @@
         }
 
         .customer-submit-btn {
-            margin-top:20px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -70,6 +70,19 @@
 
         <hr>
 
+        @if (session('success'))
+        <div class="alert alert-success" role="alert">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        @if (session('error'))
+        <div class="alert alert-danger" role="alert">
+            {{ session('error') }}
+        </div>
+        @endif
+
+
         <!-- Search Result Table -->
         @if(isset($data['bid_info']))
         @if(empty($data['bid_info']))
@@ -83,7 +96,7 @@
                             <th>Product/Service</th>
                             <th>Qty</th>
                             <th>Unit Price</th>
-                            <th>Total</th>
+                            <th>Total @php $total = 0; @endphp</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,7 +105,7 @@
                             <td><input type="checkbox"> {{ $service->service_description}}</td>
                             <td>{{ $service->qty}}</td>
                             <td>{{ $service->unit_price}}</td>
-                            <td>${{ $service->qty * $service->unit_price}}</td>
+                            <td>$@php $total += $service->qty * $service->unit_price; @endphp {{ $service->qty * $service->unit_price }}</td>
                         </tr>
                         @endforeach
                         <!-- More rows can go here -->
@@ -104,37 +117,41 @@
                         <strong>Total: </strong>
                     </div>
                     <div class="col-sm-1 col-md-1 text-left">
-                        <strong> </strong>
+                        <strong> ${{ $total}}</strong>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-6 col-md-6">
-                        <div class="form-group inline-form-group">
-                            <label for="name">Name:</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
-                        </div>
+                    <form method="POST" action="{{url('/submitBid')}}">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group inline-form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
+                            </div>
 
-                        <!-- Phone Field -->
-                        <div class="form-group inline-form-group">
-                            <label for="phone">Phone:</label>
-                            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number" required>
-                        </div>
+                            <!-- Phone Field -->
+                            <div class="form-group inline-form-group">
+                                <label for="phone">Phone:</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter your phone number" required>
+                            </div>
 
-                        <!-- Email Field -->
-                        <div class="form-group inline-form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
+                            <!-- Email Field -->
+                            <div class="form-group inline-form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" required>
+                            </div>
                         </div>
-                    </div>
                 </div>
 
                 <div class="row customer-submit-btn">
                     <div class="text-center">
                         <div class="flex">
-                            <button type="submit" class="btn btn-danger" style="margin-right: 30px;">Decline</button>
-                            <button type="submit" class="btn btn-success" style="margin-right: 30px;">Accept & Submit</button>
-                            <button type="submit" class="btn btn-info">Request In-Person Follow-Up</button>
+                            <input type="hidden" name="id" value="{{ $data['bid_info']->id }}">
+                            <button type="submit" name="action" value="2" class="btn btn-danger" style="margin-right: 30px;">Decline</button>
+                            <button type="submit" name="action" value="3" class="btn btn-success" style="margin-right: 30px;">Accept & Submit</button>
+                            <button type="submit" name="action" value="4" class="btn btn-info">Request In-Person Follow-Up</button>
+                            @csrf
+                            </form>
                         </div>
                     </div>
                 </div>
