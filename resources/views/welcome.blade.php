@@ -104,7 +104,7 @@
                         <strong>Total: </strong>
                     </div>
                     <div class="col-sm-1 col-md-1 text-left">
-                        <strong> $9.00</strong>
+                        <strong> </strong>
                     </div>
                 </div>
 
