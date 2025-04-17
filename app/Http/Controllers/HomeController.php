@@ -31,7 +31,15 @@ class HomeController extends Controller
 
     public function manageBids()
     {
-        $data['bids'] =  DB::Table('bids')->where('user_id', Auth::user()->id)->get();
+        $data['bids'] = DB::table('bids')
+            ->join('bid_details', 'bids.id', '=', 'bid_details.bid_id')
+            ->select('bids.id', 'bids.address', 'bids.status', DB::raw('SUM(bid_details.qty * bid_details.unit_price) as total_price'))
+            ->groupBy('bids.id', 'bids.address', 'bids.status')
+            ->get();
+
+           
+
+        //$data['bids'] =  DB::Table('bids')->get();
         return view('admin/manage_bids', ['data' => $data]);
     }
 
@@ -47,7 +55,7 @@ class HomeController extends Controller
             $service_descriptions = $request->input('service_description');
             $unit_prices = $request->input('unit_price');
             $qtys = $request->input('qty');
-           
+
 
             for ($i = 0; $i < count($service_descriptions); $i++) {
                 DB::table('bid_details')->insert([
@@ -63,7 +71,7 @@ class HomeController extends Controller
 
         return view('admin/form_bid');
     }
-    
+
     public function changePin(Request $request)
     {
         if ($request->isMethod('post')) {
@@ -81,9 +89,9 @@ class HomeController extends Controller
 
             //change password here.
             DB::Table('users')->where('id', Auth::user()->id)
-            ->update([
-                'pin' => $request->new_pin,
-            ]);
+                ->update([
+                    'pin' => $request->new_pin,
+                ]);
 
             return redirect()->back()->with('success', 'Updated Successfully.');
         }

@@ -29,15 +29,15 @@
                     <div class="box-body">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Current PIN</label>
-                            <input type="password" class="form-control" name="old_pin"  placeholder="Current Password" required>
+                            <input type="password" class="form-control" name="old_pin"  placeholder="Current PIN" required>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">New PIN</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="New Password">
+                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="New PIN">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Confirm PIN</label>
-                            <input type="password" class="form-control" name="confirm_pin"  placeholder="Confirm Password" required>
+                            <input type="password" class="form-control" name="confirm_pin"  placeholder="Confirm PIN" required>
                         </div>
 
                     </div>

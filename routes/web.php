@@ -17,7 +17,7 @@ Route::any('/', [App\Http\Controllers\LandingPageController::class, 'index']);
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'manageBids'])->name('home');
 Route::get('/manageBids', [App\Http\Controllers\HomeController::class, 'manageBids'])->name('manageBids');
 Route::any('/changePin', [App\Http\Controllers\HomeController::class, 'changePin'])->name('changePin');
 Route::any('/createBid', [App\Http\Controllers\HomeController::class, 'createBid'])->name('createBid');

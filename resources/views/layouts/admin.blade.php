@@ -93,8 +93,8 @@
                 <ul class="sidebar-menu">
                     <li class="header">MAIN NAVIGATION</li>
                     <li class="active treeview">
-                        <a href="{{ url('/home') }}">
-                            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                        <a href="{{ url('/changePin') }}">
+                            <i class="fa fa-dashboard"></i> <span>Change PIN</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
@@ -113,22 +113,6 @@
                             <li><a href="{{ url('/manageBids') }}"><i class="fa fa-circle-o"></i> Bid Lisitng </a></li>
                         </ul>
                     </li>
-
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-laptop"></i>
-                            <span>Setting</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="{{ url('/changePin') }}"><i class="fa fa-circle-o"></i> Change PIN</a></li>
-
-                        </ul>
-                    </li>
-
-
                     <!--<li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>-->
                 </ul>
             </section>

@@ -39,8 +39,21 @@
                             <tr>
                                 <td> {{ str_pad($bid->id, 6, '0', STR_PAD_LEFT) }} </td>
                                 <td>{{ $bid->address }} </td>
-                                <td></td>
-                                <td> </td>
+                                <td>${{ $bid->total_price }}</td>
+                                <td>
+                                    @if($bid->status === 1)
+                                    Pending
+                                    @elseif($bid->status === 2)
+                                    Rejected
+                                    @elseif($bid->status === 3)
+                                    Accepted
+                                    @elseif($bid->status === 4)
+                                    Requested
+                                    @else
+                                    Unknown
+                                    @endif
+
+                                </td>
                                 <td></td>
                             </tr>
                             @endforeach
