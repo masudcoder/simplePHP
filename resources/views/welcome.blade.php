@@ -147,7 +147,7 @@
                     <div class="text-center">
                         <div class="flex">
                             <input type="hidden" name="id" value="{{ $data['bid_info']->id }}">
-                            <button type="submit" name="action" value="2" class="btn btn-danger" style="margin-right: 30px;">Decline</button>
+                            <button type="submit" disabled="disabled" name="action" value="2" class="btn btn-danger" style="margin-right: 30px;">Decline</button>
                             <button type="submit" name="action" value="3" class="btn btn-success" style="margin-right: 30px;">Accept & Submit</button>
                             <button type="submit" name="action" value="4" class="btn btn-info">Request In-Person Follow-Up</button>
                             @csrf
