@@ -33,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">New PIN</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="New PIN">
+                            <input type="password" class="form-control" name="new_pin" id="exampleInputPassword1" placeholder="New PIN">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Confirm PIN</label>

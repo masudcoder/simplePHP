@@ -58,7 +58,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="{{ url('/changePin') }}" class="btn btn-default btn-flat">Profile</a>
+                                        <a href="{{ url('/changePin') }}" class="btn btn-default btn-flat">Change PIN</a>
                                     </div>
                                     <div class="pull-right">
                                         <a class="btn btn-default btn-flat" href="{{ route('logout') }}"
