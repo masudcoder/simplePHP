@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.manageBid')
 
 @section('breadcrumb')
 <section class="content-header">

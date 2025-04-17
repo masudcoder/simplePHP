@@ -25,7 +25,7 @@
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form method="POST" action="{{ url('/createBid')}}">
+                <form method="POST" action="{{ url('/changePin')}}">
                     <div class="box-body">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Current PIN</label>
