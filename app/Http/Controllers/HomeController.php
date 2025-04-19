@@ -76,7 +76,7 @@ class HomeController extends Controller
     {
         if ($request->isMethod('post')) {
             if ($request->old_pin !=  Auth::user()->pin) {
-                return redirect()->back()->with('error', 'Sorry, Old PIN is wrong!');
+                return redirect()->back()->with('error', 'Sorry, Current PIN is wrong!');
             }
 
             if ($request->new_pin !=  $request->confirm_pin) {

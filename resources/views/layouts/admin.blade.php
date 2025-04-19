@@ -48,20 +48,7 @@
 
 
                         <li class="dropdown user user-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-
-                                <span class="hidden-xs">Welcome</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <!-- User image -->
-
-                                <!-- Menu Footer-->
-                                <li class="user-footer">
-                                    <div class="pull-left">
-                                        <a href="{{ url('/changePin') }}" class="btn btn-default btn-flat">Change PIN</a>
-                                    </div>
-                                    <div class="pull-right">
-                                        <a class="btn btn-default btn-flat" href="{{ route('logout') }}"
+                        <a class="btn btn-default btn-flat" href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                             {{ __('Logout') }}
@@ -70,9 +57,6 @@
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                             @csrf
                                         </form>
-                                    </div>
-                                </li>
-                            </ul>
                         </li>
                         <!-- Control Sidebar Toggle Button -->
 

@@ -44,35 +44,35 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Total Removal</td>
+                                        <td>{{ config('constants')[0] }}</td>
                                         <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
                                         <td><input type="text" class="form-control qty" name="qty[]" required></td>
                                         <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
                                         <td class="row-total">$0.00</td>
                                     </tr>
                                     <tr>
-                                        <td>Stump Gridning</td>
+                                        <td>{{ config('constants')[1] }}</td>
                                         <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
                                         <td><input type="text" class="form-control qty" name="qty[]" required></td>
                                         <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
                                         <td class="row-total">$0.00</td>
                                     </tr>
                                     <tr>
-                                        <td>Tree Trimming & Purning</td>
+                                        <td>{{ config('constants')[2] }}</td>
                                         <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
                                         <td><input type="text" class="form-control qty" name="qty[]" required></td>
                                         <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
                                         <td class="row-total">$0.00</td>
                                     </tr>
                                     <tr>
-                                        <td>Debris cleanup</td>
+                                        <td>{{ config('constants')[3] }}</td>
                                         <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
                                         <td><input type="text" class="form-control qty" name="qty[]" required></td>
                                         <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
                                         <td class="row-total">$0.00</td>
                                     </tr>
                                     <tr>
-                                        <td>Tree/Plant Healthcare</td>
+                                        <td>{{ config('constants')[4] }}</td>
                                         <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
                                         <td><input type="text" class="form-control qty" name="qty[]" required></td>
                                         <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
