@@ -18,7 +18,14 @@ class LandingPageController extends Controller
         if ($request->isMethod('post')) {
             $data['show_search_result'] = 1;
             $data['search_by'] = $request->ref_id;
-            $data['bid_info'] = DB::Table('bids')->where('id', (int)$request->ref_id)->first();
+
+            if (strlen($request->ref_id) < 6) {
+                $ref_id = 0;
+            } else {
+                $ref_id = (int)$request->ref_id;
+            }
+            
+            $data['bid_info'] = DB::Table('bids')->where('id', $ref_id)->first();
             if (isset($data['bid_info']->id)) {
                 $data['bid_services_data'] = DB::Table('bid_details')->where('bid_id', $data['bid_info']->id)->get();
             }
