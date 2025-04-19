@@ -44,7 +44,7 @@
                                     @if($bid->status === 1)
                                     Pending
                                     @elseif($bid->status === 2)
-                                    Rejected
+                                    Declined
                                     @elseif($bid->status === 3)
                                     Accepted
                                     @elseif($bid->status === 4)

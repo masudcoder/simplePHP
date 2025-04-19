@@ -117,7 +117,7 @@
                     <tbody>
                         @foreach($data['bid_services_data'] as $key => $service)
                         <tr>
-                            <td><input type="checkbox" data-price="{{ $service->qty * $service->unit_price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
+                            <td><input type="checkbox" name="services" value="{{ $service->bid_id}}" data-price="{{ $service->qty * $service->unit_price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
                                 <label for="chkboxService_{{ $service->id}}"> {{ config('constants')[$key] }}</label><br>
                                 {{ $service->service_description}}
                             </td>
@@ -173,7 +173,7 @@
                     <div class="text-center">
                         <div class="flex">
                             <input type="hidden" name="id" value="{{ $data['bid_info']->id }}">
-                            <button type="submit" disabled="disabled" name="action" value="2" class="btn btn-danger" style="margin-right: 30px;">Decline</button>
+                            <button type="submit" name="action" value="2" class="btn btn-danger" style="margin-right: 30px;">Decline</button>
                             <button type="submit" name="action" value="3" class="btn btn-success" style="margin-right: 30px;">Accept & Submit</button>
                             <button type="submit" name="action" value="4" class="btn btn-info">Request In-Person Follow-Up</button>
                             @csrf
