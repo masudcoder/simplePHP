@@ -27,18 +27,30 @@
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>Ref ID</th>
-                                <th>Address</th>
-                                <th>Est Cost</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th style="width: 8%;">Ref ID</th>
+                                <th style="width: 8%;">Street</th>
+                                <th style="width: 8%;">City</th>
+                                <th style="width: 8%;">State</th>
+                                <th style="width: 8%;">Zip</th>
+                                <th style="width: 8%;">Cust. Name</th>
+                                <th style="width: 8%;">Cust. Phone</th>
+                                <th style="width: 8%;">Cust. Email</th>
+                                <th style="width: 8%;">Est Cost</th>
+                                <th style="width: 8%;">Status</th>
+                                <th style="width: 12%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($data['bids'] as $bid)
                             <tr>
-                                <td> {{ str_pad($bid->id, 6, '0', STR_PAD_LEFT) }} </td>
-                                <td>{{ $bid->address }} </td>
+                                <td><a href="{{ url('/bid/details/'. $bid->id)}}">{{ str_pad($bid->id, 6, '0', STR_PAD_LEFT) }}</a></td>
+                                <td>{{ $bid->street}}</td>
+                                <td>{{ $bid->city }}</td>
+                                <td>{{ $bid->state }}</td>
+                                <td>{{ $bid->zip }}</td>
+                                <td>{{ $bid->customer_name }}</td>
+                                <td>{{ $bid->customer_phone }}</td>
+                                <td>{{ $bid->customer_email }}</td>
                                 <td>${{ $bid->total_price }}</td>
                                 <td>
                                     @if($bid->status === 1)
@@ -54,14 +66,34 @@
                                     @endif
 
                                 </td>
-                                <td></td>
+                                <td>
+                                    <!-- <a href="{{ url('/bid/edit/'. $bid->id)}}" class="btn btn-primary btn-sm">
+                                        <i class="glyphicon glyphicon-pencil"></i>
+                                    </a> -->
+                                    <a href="{{ url('/bid/details/'. $bid->id)}}" class="btn btn-info">
+                                        <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+
+                                    <!-- <form action="/delete/1" method="POST" style="display:inline;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </button>
+                                    </form> -->
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
                                 <th>Ref ID</th>
-                                <th>Address</th>
+                                <th>Street</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Zip</th>
+                                <th>Cust. Name</th>
+                                <th>Cust. Phone</th>
+                                <th>Cust. Email</th>
                                 <th>Est Cost</th>
                                 <th>Status</th>
                                 <th>Action</th>

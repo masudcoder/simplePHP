@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Bid;
+use App\Models\GeneralData;
 
 class HomeController extends Controller
 {
@@ -14,8 +15,11 @@ class HomeController extends Controller
      *
      * @return void
      */
+    public $generalData;
+
     public function __construct()
     {
+        $this->generalData = new GeneralData();
         $this->middleware('auth');
     }
 
@@ -33,11 +37,11 @@ class HomeController extends Controller
     {
         $data['bids'] = DB::table('bids')
             ->join('bid_details', 'bids.id', '=', 'bid_details.bid_id')
-            ->select('bids.id', 'bids.address', 'bids.status', DB::raw('SUM(bid_details.qty * bid_details.unit_price) as total_price'))
-            ->groupBy('bids.id', 'bids.address', 'bids.status')
+            ->select('bids.id', 'bids.street', 'bids.city', 'bids.state','bids.zip', 'bids.customer_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status', DB::raw('SUM(bid_details.qty * bid_details.unit_price) as total_price'))
+            ->groupBy('bids.id', 'bids.street', 'bids.city', 'bids.state','bids.zip', 'bids.customer_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status')
             ->get();
 
-           
+
 
         //$data['bids'] =  DB::Table('bids')->get();
         return view('admin/manage_bids', ['data' => $data]);
@@ -45,10 +49,17 @@ class HomeController extends Controller
 
     public function createBid(Request $request)
     {
+        $data = [];
+        $data['next_ref_id'] = $this->generalData->getNextRefID();
+
         if ($request->isMethod('post')) {
             $bid_id = DB::table('bids')->insertGetId([
                 'user_id' => Auth::user()->id,
-                'address' => $request->input('address'),
+                'street' => $request->input('street'),
+                'city' => $request->input('city'),
+                'state' => $request->input('state'),
+                'zip' => $request->input('zip'),
+                'address_more_info' => $request->input('address_more_info'),
             ]);
 
 
@@ -69,8 +80,32 @@ class HomeController extends Controller
             return redirect('/manageBids')->with('success', 'Bid has been added successfully.');
         }
 
+        return view('admin/form_bid', ['data' => $data]);
+    }
+
+    public function editBidForm()
+    {
+        // $data['single_info'] = $this->generalData->getBidinfo($id);
         return view('admin/form_bid');
     }
+
+    public function details($bid_id)
+    {
+        $data['bid_info'] = $this->generalData->getBidinfo($bid_id);
+        $data['bid_services_data'] = DB::Table('bid_details')->where('bid_id', $bid_id)->get();
+
+
+        $selected_services = [];
+        $bid_selected_services = DB::Table('bid_selected_services')->where('bid_id', $bid_id)->get();
+        foreach ($bid_selected_services as $bid_selected_service) {
+            $selected_services[] = $bid_selected_service->service_id;
+        }
+        $data['selected_services'] = $selected_services;
+        
+        return view('admin/bid_details', ['data' => $data]);
+    }
+
+
 
     public function changePin(Request $request)
     {
