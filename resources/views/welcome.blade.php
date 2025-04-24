@@ -108,10 +108,10 @@
                     <table class="table table-bordered table-striped" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th style="width: 70%;">Product/Service</th>
-                                <th style="width: 10%;">Qty</th>
-                                <th style="width: 10%;">Unit Price</th>
-                                <th style="width: 10%;">Total @php $total = 0; @endphp</th>
+                                <th style="width: 60%;">Product/Service</th>
+                                <th style="width: 12%;">Qty</th>
+                                <th style="width: 12%;">Unit Price</th>
+                                <th style="width: 16%;">Total @php $total = 0; @endphp</th>
                             </tr>
                         </thead>
                         <tbody>
