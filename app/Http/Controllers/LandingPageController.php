@@ -26,17 +26,19 @@ class LandingPageController extends Controller
 
             $data['bid_info'] = DB::Table('bids')->where('id', $ref_id)->first();
 
-            if (isset($data['bid_info']->id)) {
-                $data['bid_services_data'] = DB::Table('bid_details')->where('bid_id', $data['bid_info']->id)->get();
-            }
-
+            //retrieve services data, so far 5 services.
             //retrieve service id that already submitted by customer
             $selected_services = [];
-            $bid_selected_services = DB::Table('bid_selected_services')->where('bid_id', $data['bid_info']->id)->get();
-            foreach ($bid_selected_services as $bid_selected_service) {
-                $selected_services[] = $bid_selected_service->service_id;
+            if (isset($data['bid_info']->id)) {
+                $data['bid_services_data'] = DB::Table('bid_details')->where('bid_id', $data['bid_info']->id)->get();
+                $bid_selected_services = DB::Table('bid_selected_services')->where('bid_id', $data['bid_info']->id)->get();
+                foreach ($bid_selected_services as $bid_selected_service) {
+                    $selected_services[] = $bid_selected_service->service_id;
+                }
+                $data['selected_services'] = $selected_services;
             }
-            $data['selected_services'] = $selected_services;
+
+            
         }
         return view('welcome', ['data' => $data]);
     }
@@ -58,8 +60,8 @@ class LandingPageController extends Controller
                 );
 
 
-            DB::table('bid_selected_services')->where('bid_id',  $request->id)->delete(); 
-                      
+            DB::table('bid_selected_services')->where('bid_id',  $request->id)->delete();
+
             $selected_services = $request->services ? $request->services : [];
             foreach ($selected_services as $serviceID) {
                 DB::Table('bid_selected_services')->insert(

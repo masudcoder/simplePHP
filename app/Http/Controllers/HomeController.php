@@ -58,8 +58,7 @@ class HomeController extends Controller
                 'street' => $request->input('street'),
                 'city' => $request->input('city'),
                 'state' => $request->input('state'),
-                'zip' => $request->input('zip'),
-                'address_more_info' => $request->input('address_more_info'),
+                'zip' => $request->input('zip')
             ]);
 
 
@@ -101,7 +100,8 @@ class HomeController extends Controller
             $selected_services[] = $bid_selected_service->service_id;
         }
         $data['selected_services'] = $selected_services;
-        
+
+
         return view('admin/bid_details', ['data' => $data]);
     }
 
