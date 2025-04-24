@@ -148,23 +148,22 @@
                     </div>
 
                     <div class="row">
-
                         <div class="col-sm-6 col-md-6">
                             <div class="form-group inline-form-group">
                                 <label for="name">Name:</label>
-                                <input type="text" class="form-control customer-info" id="name" name="name" value="{{ $data['bid_info']->customer_name }}" placeholder="Enter your name" required>
+                                <input type="text" class="form-control customer-info" id="name" name="name" placeholder="Enter your name" required>
                             </div>
 
                             <!-- Phone Field -->
                             <div class="form-group inline-form-group">
                                 <label for="phone">Phone:</label>
-                                <input type="tel" class="form-control customer-info" id="phone" name="phone" value="{{ $data['bid_info']->customer_phone }}" placeholder="Enter your phone number" required>
+                                <input type="tel" class="form-control customer-info" id="phone" name="phone"  placeholder="Enter your phone number" required>
                             </div>
 
                             <!-- Email Field -->
                             <div class="form-group inline-form-group">
                                 <label for="email">Email:</label>
-                                <input type="email" class="form-control customer-info" id="email" name="email" value="{{ $data['bid_info']->customer_email }}" placeholder="Enter your email address" required>
+                                <input type="email" class="form-control customer-info" id="email" name="email" placeholder="Enter your email address" required>
                             </div>
                         </div>
                     </div>
