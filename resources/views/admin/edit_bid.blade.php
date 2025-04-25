@@ -21,7 +21,7 @@
             <!-- general form elements -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Bid Update &nbsp;&nbsp;&nbsp;<strong>Ref ID:</strong> 11231231 </h3>
+                    <h3 class="box-title">Bid Update &nbsp;&nbsp;&nbsp;<strong>Ref ID:</strong> {{ str_pad($data['bid_info']->id, 6, '0', STR_PAD_LEFT) }} </h3>
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
@@ -163,12 +163,12 @@
                                     <tr>
                                         <td colspan="3"></td>
                                         <td><b>Grand Total</b></td>
-                                        <td class="grand-total">$0.00</td>
+                                        <td class="grand-total">${{ number_format($total, 2, '.', ',') }}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="3"></td>
                                         <td><b>Sub Total</b></td>
-                                        <td class="subtotal" id="subtotal">$0.00</td>
+                                        <td class="subtotal" id="subtotal">${{ number_format($subtotal, 2, '.', ',') }}</td>
                                     </tr>
 
                                 </tbody>
