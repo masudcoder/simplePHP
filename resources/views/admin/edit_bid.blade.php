@@ -152,7 +152,7 @@
                                         <td class="row-total">
                                             @php $total += $service->qty * $service->unit_price; @endphp
                                             @php
-                                            if(in_array($service->id, $data['selected_services'])) {
+                                            if($data['bid_info']->status == 1 || in_array($service->id, $data['selected_services'])) {
                                             $subtotal += $service->qty * $service->unit_price;
                                             }
                                             @endphp
