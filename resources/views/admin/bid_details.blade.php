@@ -27,17 +27,17 @@
                 <div class="box-body">
                     <div style="padding:15px 5px">
                         Ref.ID: {{ str_pad($data['bid_info']->id, 6, '0', STR_PAD_LEFT) }}. &nbsp;&nbsp;{{ $data['bid_info']->street}} Address:{{ $data['bid_info']->street}} {{ $data['bid_info']->city}} {{ $data['bid_info']->state}} {{ $data['bid_info']->zip}}
-                        <br>Status:  @if($data['bid_info']->status === 1)
-                                    Pending
-                                    @elseif($data['bid_info']->status === 2)
-                                    Declined
-                                    @elseif($data['bid_info']->status === 3)
-                                    Accepted
-                                    @elseif($data['bid_info']->status === 4)
-                                    Requested
-                                    @else
-                                    Unknown
-                                    @endif
+                        <br>Status: @if($data['bid_info']->status == 1)
+                        Pending
+                        @elseif($data['bid_info']->status == 2)
+                        Declined
+                        @elseif($data['bid_info']->status == 3)
+                        Accepted
+                        @elseif($data['bid_info']->status == 4)
+                        Requested
+                        @else
+                        Unknown
+                        @endif
                     </div>
                     <table class="table table-bordered table-striped" style="width: 100%;">
                         <thead>
@@ -51,7 +51,7 @@
                         <tbody>
                             @foreach($data['bid_services_data'] as $key => $service)
                             <tr>
-                                <td><input type="checkbox" {{ in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }}>
+                                <td><input type="checkbox" disabled {{ $data['bid_info']->status == 1 || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} data-price="{{ $service->qty * $service->unit_price }}" class="chkboxService">
                                     <label for="chkboxService_{{ $service->id}}"> {{ config('constants')[$key] }}</label><br>
                                     {{ $service->service_description}}
                                 </td>
@@ -60,9 +60,9 @@
                                 <td>
                                     @php $total += $service->qty * $service->unit_price; @endphp
                                     @php
-                                        if(in_array($service->id, $data['selected_services'])) {
-                                            $subtotal += $service->qty * $service->unit_price;
-                                        }
+                                    if(in_array($service->id, $data['selected_services'])) {
+                                    $subtotal += $service->qty * $service->unit_price;
+                                    }
                                     @endphp
                                     ${{ number_format($service->qty * $service->unit_price, 2, '.', ',') }}
                                 </td>
@@ -82,7 +82,7 @@
                             <td style="width: 50%;"></td>
                             <td style="width: 15%;"></td>
                             <td style="width: 15%;">Sub Total:</td>
-                            <td style="width: 20%;">${{ number_format($subtotal, 2, '.', ',') }}</td>
+                            <td style="width: 20%;" id="subtotal">${{ number_format($subtotal, 2, '.', ',') }}</td>
                         </tr>
                     </table>
 
@@ -101,6 +101,28 @@
 
 @push('scripts')
 <script>
-    
+    $(document).ready(function() {
+        calculateSubTotal();
+        
+        function calculateSubTotal() {
+            let subtotal = 0;
+            const checkboxes = document.querySelectorAll('.chkboxService');
+            checkboxes.forEach(checkbox => {
+                console.log('11');
+                if (checkbox.checked) {
+                   
+                    subtotal += parseFloat(checkbox.dataset.price);
+                }
+            });
+            console.log(subtotal);
+
+            const formattedSubtotal = subtotal.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            $('#subtotal').html('$' + formattedSubtotal);
+        }
+    });
 </script>
 @endpush

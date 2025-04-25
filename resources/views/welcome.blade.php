@@ -157,7 +157,7 @@
                             <!-- Phone Field -->
                             <div class="form-group inline-form-group">
                                 <label for="phone">Phone:</label>
-                                <input type="tel" class="form-control customer-info" id="phone" name="phone"  placeholder="Enter your phone number" required>
+                                <input type="tel" class="form-control customer-info" id="phone" name="phone" placeholder="Enter your phone number" required>
                             </div>
 
                             <!-- Email Field -->
@@ -166,6 +166,25 @@
                                 <input type="email" class="form-control customer-info" id="email" name="email" placeholder="Enter your email address" required>
                             </div>
                         </div>
+
+                        @if(!empty($data['bid_info']))
+                        <div class="col-sm-6 col-md-6 text-center">
+                            <div style="padding:10px 0 0 20px ">
+                                <strong>Status: </strong>
+                                @if($data['bid_info']->status === 1)
+                                Pending
+                                @elseif($data['bid_info']->status === 2)
+                                Declined
+                                @elseif($data['bid_info']->status === 3)
+                                Accepted
+                                @elseif($data['bid_info']->status === 4)
+                                Requested
+                                @else
+                                Unknown
+                                @endif
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
                     <div class="row customer-submit-btn">
