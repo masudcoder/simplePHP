@@ -67,11 +67,13 @@
 
                                 </td>
                                 <td>
-                                    <!-- <a href="{{ url('/bid/edit/'. $bid->id)}}" class="btn btn-primary btn-sm">
-                                        <i class="glyphicon glyphicon-pencil"></i>
-                                    </a> -->
+                                   
                                     <a href="{{ url('/bid/details/'. $bid->id)}}" class="btn btn-info">
                                         <span class="glyphicon glyphicon-eye-open"></span>
+                                    </a>
+                                    
+                                    <a href="{{ url('/bid/edit/'. $bid->id)}}" class="btn btn-primary btn-sm">
+                                        <i class="glyphicon glyphicon-pencil"></i>
                                     </a>
 
                                     <!-- <form action="/delete/1" method="POST" style="display:inline;">

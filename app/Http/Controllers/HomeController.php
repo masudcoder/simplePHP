@@ -82,10 +82,28 @@ class HomeController extends Controller
         return view('admin/form_bid', ['data' => $data]);
     }
 
-    public function editBidForm()
+    public function editBidForm($bid_id)
     {
-        // $data['single_info'] = $this->generalData->getBidinfo($id);
-        return view('admin/form_bid');
+        $data['bid_info'] = $this->generalData->getBidinfo($bid_id);
+        $data['bid_services_data'] = DB::Table('bid_details')->where('bid_id', $bid_id)->get();
+
+       
+
+
+        $selected_services = [];
+        $bid_selected_services = DB::Table('bid_selected_services')->where('bid_id', $bid_id)->get();
+        foreach ($bid_selected_services as $bid_selected_service) {
+            $selected_services[] = $bid_selected_service->service_id;
+        }
+        $data['selected_services'] = $selected_services;
+
+        return view('admin/edit_bid', ['data' => $data]);
+    }
+
+    public function updateBid(Request $request) {
+
+        //return redirect()->back()->with('success', 'Updated Bid Functionalities are not completed, still in progress.');
+
     }
 
     public function details($bid_id)
