@@ -131,26 +131,25 @@ class HomeController extends Controller
             }
 
             // bid services selected
-            $selected_services = $request->services ? $request->services : [];
 
-            DB::table('bid_selected_services')->where('bid_id',  $request->id)->delete();
-
-            if ($request->input('name') || $request->input('phone') || $request->input('email')) {
-                foreach ($selected_services as $serviceID) {
-                    DB::Table('bid_selected_services')
-                        ->insert(
-                            [
-                                'bid_id' => $request->id,
-                                'service_id' => $serviceID
-                            ]
-                        );
+            if ($request->input('status') !== 1) {
+                $selected_services = $request->services ? $request->services : [];
+                DB::table('bid_selected_services')->where('bid_id',  $request->id)->delete();
+                if ($request->input('name') || $request->input('phone') || $request->input('email')) {
+                    foreach ($selected_services as $serviceID) {
+                        DB::Table('bid_selected_services')
+                            ->insert(
+                                [
+                                    'bid_id' => $request->id,
+                                    'service_id' => $serviceID
+                                ]
+                            );
+                    }
                 }
             }
+
+            
         }
-
-
-
-
         return redirect()->back()->with('success', 'Bid Updated successfully.');
     }
 

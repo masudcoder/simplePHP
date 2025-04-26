@@ -158,8 +158,14 @@
                                 <tbody>
                                     @foreach($data['bid_services_data'] as $key => $service)
                                     <tr>
-                                        <td><input type="checkbox" {{ empty($data['selected_services']) || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} name="services[]" value="{{ $service->id}}" data-price="{{ $service->qty * $service->unit_price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
-                                            <label for="chkboxService_{{ $service->id}}"> {{ config('constants')[$key] }}</label>
+                                        <td>
+                                        @if($data['bid_info']->status == 1)
+                                        <input type="checkbox" disabled checked="checked" name="services[]" value="{{ $service->id}}" data-price="{{ $service->qty * $service->unit_price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
+                                        @else
+                                        <input type="checkbox" {{ empty($data['selected_services']) || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} name="services[]" value="{{ $service->id}}" data-price="{{ $service->qty * $service->unit_price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
+                                        @endif
+
+                                        <label for="chkboxService_{{ $service->id}}"> {{ config('constants')[$key] }}</label>
                                             <input type="hidden" name="bid_row_id[]" value="{{ $service->id}}">
                                         </td>
                                         <td><textarea class="form-control" rows="1" name="service_description[]" required>{{ $service->service_description}}</textarea></td>
@@ -181,6 +187,7 @@
                                         <td><b>Grand Total</b></td>
                                         <td class="grand-total">${{ number_format($total, 2, '.', ',') }}</td>
                                     </tr>
+                                    @if($data['bid_info']->status != 1)
                                     <tr>
                                         <td colspan="3"></td>
                                         <td><b>Sub Total</b></td>
@@ -188,11 +195,13 @@
                                             ${{ number_format($subtotal, 2, '.', ',') }}
                                         </td>
                                     </tr>
+                                    @endif
 
                                 </tbody>
                             </table>
                         </div>
 
+                        @if($data['bid_info']->status != 1)
                         <div class="form-group">
                             <div class="box-body">
                                 <div class="row">
@@ -212,6 +221,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
 
                     </div>
                     <!-- /.box-body -->
@@ -219,6 +229,7 @@
                     <div class="box-footer">
                         @csrf
                         <input type="hidden" name="id" value="{{ $data['bid_info']->id}}">
+                        <input type="hidden" name="status" value="{{ $data['bid_info']->status}}">
                         <button type="submit" class="btn btn-primary">UPDATE</button>
                     </div>
                 </form>
