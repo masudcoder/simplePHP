@@ -37,11 +37,9 @@ class HomeController extends Controller
     {
         $data['bids'] = DB::table('bids')
             ->join('bid_details', 'bids.id', '=', 'bid_details.bid_id')
-            ->select('bids.id', 'bids.street', 'bids.city', 'bids.state','bids.zip', 'bids.customer_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status', DB::raw('SUM(bid_details.qty * bid_details.unit_price) as total_price'))
-            ->groupBy('bids.id', 'bids.street', 'bids.city', 'bids.state','bids.zip', 'bids.customer_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status')
+            ->select('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.customer_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status', DB::raw('SUM(bid_details.qty * bid_details.unit_price) as total_price'))
+            ->groupBy('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.customer_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status')
             ->get();
-
-
 
         //$data['bids'] =  DB::Table('bids')->get();
         return view('admin/manage_bids', ['data' => $data]);
@@ -85,10 +83,11 @@ class HomeController extends Controller
     public function editBidForm($bid_id)
     {
         $data['bid_info'] = $this->generalData->getBidinfo($bid_id);
+
+        if (empty($data['bid_info'])) {
+            return redirect('/manageBids')->with('error', 'Invalid Bid.');
+        }
         $data['bid_services_data'] = DB::Table('bid_details')->where('bid_id', $bid_id)->get();
-
-       
-
 
         $selected_services = [];
         $bid_selected_services = DB::Table('bid_selected_services')->where('bid_id', $bid_id)->get();
@@ -100,12 +99,74 @@ class HomeController extends Controller
         return view('admin/edit_bid', ['data' => $data]);
     }
 
-    public function updateBid(Request $request) {
+    public function updateBid(Request $request)
+    {
+        if ($request->isMethod('post')) {
 
-        //return redirect()->back()->with('success', 'Updated Bid Functionalities are not completed, still in progress.');
+            DB::table('bids')
+                ->where('id', $request->id)
+                ->update([
+                    'street' => $request->input('street'),
+                    'city' => $request->input('city'),
+                    'state' => $request->input('state'),
+                    'zip' => $request->input('zip'),
+                    'customer_name' => $request->input('name'),
+                    'customer_phone' => $request->input('phone'),
+                    'customer_email' => $request->input('email')
+                ]);
 
+            $service_descriptions = $request->input('service_description');
+            $unit_prices = $request->input('unit_price');
+            $qtys = $request->input('qty');
+            $bid_row_ids = $request->input('bid_row_id');
+
+            for ($i = 0; $i < count($service_descriptions); $i++) {
+                DB::table('bid_details')
+                    ->where('id', $bid_row_ids[$i])
+                    ->update([
+                        'qty' => (int) $qtys[$i],
+                        'service_description' => $service_descriptions[$i],
+                        'unit_price' => number_format((float) $unit_prices[$i], 2, '.', ''),
+                    ]);
+            }
+
+            // bid services selected
+            $selected_services = $request->services ? $request->services : [];
+
+            DB::table('bid_selected_services')->where('bid_id',  $request->id)->delete();
+
+            if ($request->input('name') || $request->input('phone') || $request->input('email')) {
+                foreach ($selected_services as $serviceID) {
+                    DB::Table('bid_selected_services')
+                        ->insert(
+                            [
+                                'bid_id' => $request->id,
+                                'service_id' => $serviceID
+                            ]
+                        );
+                }
+            }
+        }
+
+
+
+
+        return redirect()->back()->with('success', 'Bid Updated successfully.');
     }
 
+
+    public function deleteBid(Request $request)
+    {
+        if ($request->isMethod('post')) {
+
+            if ($request->input('id')) {
+                DB::table('bids')->where('id', $request->input('id'))->delete();
+                DB::table('bid_details')->where('bid_id', $request->input('id'))->delete();
+                DB::table('bid_selected_services')->where('bid_id', $request->input('id'))->delete();
+            }
+            return redirect('/manageBids')->with('success', 'Bid has been deleted successfully.');
+        }
+    }
     public function details($bid_id)
     {
         $data['bid_info'] = $this->generalData->getBidinfo($bid_id);

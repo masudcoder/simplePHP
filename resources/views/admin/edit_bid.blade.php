@@ -21,11 +21,24 @@
             <!-- general form elements -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Bid Update &nbsp;&nbsp;&nbsp;<strong>Ref ID:</strong> {{ str_pad($data['bid_info']->id, 6, '0', STR_PAD_LEFT) }} </h3>
+                    <h3 class="box-title">Bid Update &nbsp;&nbsp;&nbsp;
+                        <strong>Ref ID:</strong> {{ str_pad($data['bid_info']->id, 6, '0', STR_PAD_LEFT) }} &nbsp;&nbsp;
+                        <strong>Status:</strong> @if($data['bid_info']->status == 1)
+                        Pending
+                        @elseif($data['bid_info']->status == 2)
+                        Declined
+                        @elseif($data['bid_info']->status == 3)
+                        Accepted
+                        @elseif($data['bid_info']->status == 4)
+                        Requested
+                        @else
+                        Unknown
+                        @endif
+                </h3>
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form method="POST" action="{{ url('/bid/update')}}">
+                <form method="POST" action="{{ url('/bid/updateBid')}}">
                     <div class="box-body">
                         <div class="form-group">
                             <div class="box-body">
@@ -145,7 +158,10 @@
                                 <tbody>
                                     @foreach($data['bid_services_data'] as $key => $service)
                                     <tr>
-                                        <td>{{ config('constants')[$key] }}</td>
+                                        <td><input type="checkbox" {{ empty($data['selected_services']) || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} name="services[]" value="{{ $service->id}}" data-price="{{ $service->qty * $service->unit_price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
+                                            <label for="chkboxService_{{ $service->id}}"> {{ config('constants')[$key] }}</label>
+                                            <input type="hidden" name="bid_row_id[]" value="{{ $service->id}}">
+                                        </td>
                                         <td><textarea class="form-control" rows="1" name="service_description[]" required>{{ $service->service_description}}</textarea></td>
                                         <td><input type="text" value="{{ $service->qty}}" class="form-control qty" name="qty[]" required></td>
                                         <td><input type="text" value="{{ $service->unit_price}}" class="form-control unit_price" name="unit_price[]" required></td>
@@ -156,10 +172,10 @@
                                             $subtotal += $service->qty * $service->unit_price;
                                             }
                                             @endphp
-                                            ${{ number_format($service->qty * $service->unit_price, 2, '.', ',') }}</td>
+                                            ${{ number_format($service->qty * $service->unit_price, 2, '.', ',') }}
+                                        </td>
                                     </tr>
                                     @endforeach
-
                                     <tr>
                                         <td colspan="3"></td>
                                         <td><b>Grand Total</b></td>
@@ -168,7 +184,9 @@
                                     <tr>
                                         <td colspan="3"></td>
                                         <td><b>Sub Total</b></td>
-                                        <td class="subtotal" id="subtotal">${{ number_format($subtotal, 2, '.', ',') }}</td>
+                                        <td class="subtotal" id="subtotal">
+                                            ${{ number_format($subtotal, 2, '.', ',') }}
+                                        </td>
                                     </tr>
 
                                 </tbody>
@@ -182,11 +200,11 @@
                                         <table cellspacing="2" cellpadding="2">
                                             <tr>
                                                 <td style="padding:0 15px">Name </td>
-                                                <td style="padding:0 15px"><input type="text" class="form-control"  name="name" placeholder="name"  value="{{ $data['bid_info']->customer_name }}"  ></td>
+                                                <td style="padding:0 15px"><input type="text" class="form-control" name="name" placeholder="name" value="{{ $data['bid_info']->customer_name }}"></td>
                                                 <td style="padding:0 15px">Phone</td>
-                                                <td style="padding:0 15px"><input type="text" class="form-control"  name="phone" placeholder="Phone" value="{{ $data['bid_info']->customer_phone }}"></td>
+                                                <td style="padding:0 15px"><input type="text" class="form-control" name="phone" placeholder="Phone" value="{{ $data['bid_info']->customer_phone }}"></td>
                                                 <td style="padding:0 15px">Email</td>
-                                                <td style="padding:0 15px"><input type="text" class="form-control"  name="email" placeholder="Email" value="{{ $data['bid_info']->customer_email }}"></td>
+                                                <td style="padding:0 15px"><input type="text" class="form-control" name="email" placeholder="Email" value="{{ $data['bid_info']->customer_email }}"></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -200,7 +218,8 @@
 
                     <div class="box-footer">
                         @csrf
-                        <button type="submit" class="btn btn-primary" disabled>UPDATE</button>
+                        <input type="hidden" name="id" value="{{ $data['bid_info']->id}}">
+                        <button type="submit" class="btn btn-primary">UPDATE</button>
                     </div>
                 </form>
             </div>
@@ -215,27 +234,32 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
+
+        calculateSubTotal();
+        $('.chkboxService').on('change', function() {
+            calculateSubTotal();
+        });
         // On Change value
         $('.qty, .unit_price').on('change', function() {
-            calculateGrandTotal();
-            // const row = $(this).closest('tr');
-            // const qty = parseFloat(row.find('.qty').val().replace(/[^0-9.]/g, '')) || 0;
-            // const unit_price = parseFloat(row.find('.unit_price').val().replace(/[^0-9.]/g, '')) || 0;
-            // const total = qty * unit_price;
-            // row.find('.row-total').html('$' + total.toFixed(2));
-
+            calculateTotal();
+            calculateSubTotal();
         });
 
-        function calculateGrandTotal() {
+       
+
+        function calculateTotal() {
+            //alert('calculateTotal');
             let grandTotal = 0;
+            let subTotal = 0;
             $('#serviceTable tbody tr').each(function() {
                 // Skip the last row (Total row)
                 if (!$(this).find('.qty').length) return;
 
                 grandTotal += calculateRowTotal($(this));
+
             });
             // Set grand total in the last row
-            $('#serviceTable tbody tr:last .grand-total').text(`$${grandTotal.toFixed(2)}`);
+            $('#serviceTable tbody tr td.grand-total').text(`$${grandTotal.toFixed(2)}`);
         }
 
         function calculateRowTotal(row) {
@@ -245,6 +269,50 @@
             row.find('.row-total').text(`$${total.toFixed(2)}`);
             return total;
         }
+
+
+        function calculateSubTotal() {
+            console.log(`calculateSubTotal`);
+            let subtotal = 0;
+            $("#serviceTable tbody tr").each(function(index) {
+                const checkbox = $(this).find(".chkboxService");
+                if (checkbox.length && checkbox.prop("checked")) {
+                    let qty = parseFloat($(this).find('.qty').val()) || 0;
+                    let unitPrice = parseFloat($(this).find('.unit_price').val()) || 0;
+                    subtotal += qty * unitPrice;
+
+                }
+            });
+
+            const formattedSubtotal = subtotal.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            $('#subtotal').text('$' + formattedSubtotal);
+
+        }
+
+        // function calculateSubTotalOnLoad() {
+        //     //alert('calculateSubTotalOnLoad');
+        //     let subtotal = 0;
+        //     const checkboxes = document.querySelectorAll('.chkboxService');
+
+        //     checkboxes.forEach(checkbox => {
+        //         if (checkbox.checked) {
+
+        //             //console.log(parseFloat(checkbox.dataset.price));
+        //             subtotal += parseFloat(checkbox.dataset.price);
+        //         }
+        //     });
+
+        //     const formattedSubtotal = subtotal.toLocaleString('en-US', {
+        //         minimumFractionDigits: 2,
+        //         maximumFractionDigits: 2
+        //     });
+
+        //     $('#subtotal').text('$' + formattedSubtotal);
+        // }
 
         // make state dropdown selected.
         document.getElementById("state").value = "<?php echo $data['bid_info']->state ?>";

@@ -23,7 +23,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'manageBids'])-
 Route::get('/manageBids', [App\Http\Controllers\HomeController::class, 'manageBids'])->name('manageBids');
 Route::get('/bid/edit/{id}', [App\Http\Controllers\HomeController::class, 'editBidForm'])->name('manageBids');
 Route::get('/bid/details/{id}', [App\Http\Controllers\HomeController::class, 'details'])->name('manageBids');
-Route::post('/bid/update', [App\Http\Controllers\HomeController::class, 'updateBid'])->name('updateBid');
+Route::post('/bid/updateBid', [App\Http\Controllers\HomeController::class, 'updateBid'])->name('updateBid');
+Route::post('/bid/delete', [App\Http\Controllers\HomeController::class, 'deleteBid'])->name('updateBid');
 
 Route::any('/changePin', [App\Http\Controllers\HomeController::class, 'changePin'])->name('changePin');
 Route::any('/createBid', [App\Http\Controllers\HomeController::class, 'createBid'])->name('createBid');

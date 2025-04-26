@@ -67,17 +67,27 @@
 
                                 </td>
                                 <td>
-                                   
+
                                     <a href="{{ url('/bid/details/'. $bid->id)}}" class="btn btn-info">
                                         <span class="glyphicon glyphicon-eye-open"></span>
                                     </a>
-                                    
                                     <a href="{{ url('/bid/edit/'. $bid->id)}}" class="btn btn-primary btn-sm">
                                         <i class="glyphicon glyphicon-pencil"></i>
                                     </a>
 
-                                    <!-- <form action="/delete/1" method="POST" style="display:inline;">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <!-- <button class="btn btn-danger" onclick="confirmDelete({{ $bid->id }})">Delete</button> -->
+                                    
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="confirmDelete({{ $bid->id }})">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </button>
+
+                                    <form id="delete-form-{{ $bid->id }}" action="{{ url('/bid/delete/')}}" method="POST" style="display: none;">
+                                        <input type="hidden" name="id" value="{{ $bid->id }}">
+                                        @csrf
+                                    </form>
+
+                                    <!-- <form action="" method="POST" style="display:inline;">
+                                         @csrf
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">
                                             <i class="glyphicon glyphicon-trash"></i>
                                         </button>
@@ -123,6 +133,7 @@
 <script src="{{ asset('plugins/slimScroll/jquery.slimscroll.min.js') }}"></script>
 <!-- FastClick -->
 <script src="{{ asset('plugins/fastclick/fastclick.js') }}"></script>
+<script src="{{ asset('sweetalert2@11.js') }}"></script>
 
 <script>
     $(function() {
@@ -143,5 +154,24 @@
         });
 
     });
+
+
+
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Are you sure to Delete?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-form-' + id).submit();
+            }
+        });
+    }
 </script>
 @endpush
