@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\DB;
 
+use App\Mail\WelcomeMail;
+use Illuminate\Support\Facades\Mail;
+
 class LandingPageController extends Controller
 {
 
@@ -89,8 +92,9 @@ class LandingPageController extends Controller
         return redirect('/');
     }
 
-    public function generateMailBody()
+    public function testMail()
     {
-        $msg = "You\' have Received a New Request! New Bid has been submitted";
+        mail("zamanmasudcoder@gmail.co","Tree Care", "tree care");
     }
+
 }
