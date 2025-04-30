@@ -46,7 +46,7 @@
                         <thead>
                             <tr>
                                 <th style="width: 80%;">Product/Service</th>
-                                <th style="width: 20%;">Total @php $total = 0; $subtotal = 0; @endphp</th>
+                                <th style="width: 20%;">Cost @php $total = 0; $subtotal = 0; @endphp</th>
                             </tr>
                         </thead>
                         <tbody>
