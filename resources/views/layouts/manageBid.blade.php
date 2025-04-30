@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('plugins/datatables/dataTables.bootstrap.css') }}">
     <!-- Theme style -->
@@ -21,6 +22,29 @@
        folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{ asset('dist/css/skins/_all-skins.min.css') }}">
 
+    <style>
+        .status-pending {
+            color: #000;
+        }
+
+        .status-declined {
+            color: red;
+        }
+
+        .status-accepted {
+            color: green;
+        }
+
+        .status-requested {
+            color: blue;
+        }
+        .input-price {
+            padding-top:55px;
+        }
+        .service-description {
+            width: 100%; height: 70px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;
+        }
+    </style>
 
 </head>
 
@@ -351,6 +375,7 @@
     <script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
     @stack('scripts')
     <script src="{{ asset('dist/js/app.min.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
 </body>
 
 </html>

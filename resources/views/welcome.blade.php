@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Simple Search Page</title>
+    <title>Grade A Tree Care</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <style>
         body {
@@ -51,6 +51,22 @@
         .txt-bold {
             font-weight: bold;
         }
+
+        .status-pending {
+            color: #000;
+        }
+
+        .status-declined {
+            color: red;
+        }
+
+        .status-accepted {
+            color: green;
+        }
+
+        .status-requested {
+            color: blue;
+        }
     </style>
 </head>
 
@@ -60,7 +76,7 @@
 
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                <div class="company-name text-center">A Tree Care Website</div>
+                <div class="company-name text-center">Grade A Tree Care</div>
             </div>
         </div>
 
@@ -100,7 +116,21 @@
 
         @if(!empty($data['bid_info']))
         <div class="row">
-            <div class="col-md-12 text-center" style="padding-bottom:8px">Ref. ID: {{ str_pad($data['bid_info']->id, 6, '0', STR_PAD_LEFT) }}. &nbsp; Address: {{ $data['bid_info']->street}} {{ $data['bid_info']->city}} {{ $data['bid_info']->state}} {{ $data['bid_info']->zip}}</div>
+            <div class="col-md-12 text-center" style="padding-bottom:8px">
+                Ref. ID: {{ str_pad($data['bid_info']->id, 6, '0', STR_PAD_LEFT) }}. &nbsp;
+                <strong>Status: </strong>
+                @if($data['bid_info']->status === 1)
+                <span class="status-pending">Pending</span>
+                @elseif($data['bid_info']->status === 2)
+                <span class="status-declined">Declined</span>
+                @elseif($data['bid_info']->status === 3)
+                <span class="status-accepted">Accepted</span>
+                @elseif($data['bid_info']->status === 4)
+                <span class="status-requested">Requested</span>
+                @else
+                <span class="status-pending">Unknown</span>
+                @endif
+            </div>
         </div>
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
@@ -108,29 +138,35 @@
                     <table class="table table-bordered table-striped" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th style="width: 60%;">Product/Service</th>
-                                <th style="width: 12%;">Qty</th>
-                                <th style="width: 12%;">Unit Price</th>
-                                <th style="width: 16%;">Total @php $total = 0; @endphp</th>
+                                <th style="width: 80%;">Product/Service</th>
+                                <th style="width: 20%;">Total @php $total = 0; @endphp</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($data['bid_services_data'] as $key => $service)
+                            @continue(!$service->price)
                             <tr>
-                                <td><input type="checkbox" {{ empty($data['selected_services']) || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} name="services[]" value="{{ $service->id}}" data-price="{{ $service->qty * $service->unit_price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
+                                <td><input type="checkbox" {{ empty($data['selected_services']) || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} name="services[]" value="{{ $service->id}}" data-price="{{  $service->price ?? 0 }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
                                     <label for="chkboxService_{{ $service->id}}"> {{ config('constants')[$key] }}</label><br>
-                                    {{ $service->service_description}}
+                                    {!! $service->service_description!!}
                                 </td>
-                                <td>{{ $service->qty}}</td>
-                                <td>{{ $service->unit_price}}</td>
-                                <td>$@php $total += $service->qty * $service->unit_price; @endphp {{ number_format($service->qty * $service->unit_price, 2, '.', ',') }}</td>
+                                <td>$@php $total += $service->price; @endphp {{ number_format($service->price, 2, '.', ',') }}</td>
                             </tr>
                             @endforeach
                             <!-- More rows can go here -->
                         </tbody>
                     </table>
-
-                    <div class="row">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 80%;" class="txt-bold text-right">Grand Total: </td>
+                            <td style="width: 20%;" class="txt-bold text-left">&nbsp;${{ number_format($total, 2, '.', ',') }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 80%;" class="txt-bold text-right">SubTotal: </td>
+                            <td id="subtotal" style="width: 80%;" class="txt-bold text-left"></td>
+                        </tr>
+                    </table>
+                    <!-- <div class="row">
                         <div class="col-sm-offset-10 col-md-offset-10 col-sm-1 col-md-1 txt-bold text-right">
                             Total:
                         </div>
@@ -142,46 +178,41 @@
                         <div class="col-sm-offset-10 col-md-offset-10 col-sm-1 col-md-1 txt-bold text-right">
                             SubTotal:
                         </div>
-                        <div class="col-sm-1 col-md-1 txt-bold text-left" id="subtotal">
-                            <!-- ${{ number_format($total, 2, '.', ',') }} -->
+                        <div class="col-sm-1 col-md-1 txt-bold text-left" id="subtotalsssdas">
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="row">
+                        <br />
                         <div class="col-sm-6 col-md-6">
                             <div class="form-group inline-form-group">
-                                <label for="name">Name:</label>
-                                <input type="text" class="form-control customer-info" id="name" name="name" placeholder="Enter your name" required>
+                                <label for="name" style="width:110px">First Name:</label>
+                                <input type="text" class="form-control customer-info" name="customer_first_name" value="{{ $data['bid_info']->customer_first_name }}" placeholder="First name" required>
                             </div>
-
+                            <div class="form-group inline-form-group">
+                                <label for="name" style="width:110px">Last Name:</label>
+                                <input type="text" class="form-control customer-info" name="customer_last_name" value="{{ $data['bid_info']->customer_last_name }}" placeholder="Last name" required>
+                            </div>
                             <!-- Phone Field -->
                             <div class="form-group inline-form-group">
-                                <label for="phone">Phone:</label>
-                                <input type="tel" class="form-control customer-info" id="phone" name="phone" placeholder="Enter your phone number" required>
+                                <label for="phone" style="width:110px">Phone:</label>
+                                <input type="tel" class="form-control customer-info" id="phone" name="phone" value="{{ $data['bid_info']->customer_phone }}" placeholder="Phone number" required>
                             </div>
 
                             <!-- Email Field -->
                             <div class="form-group inline-form-group">
-                                <label for="email">Email:</label>
-                                <input type="email" class="form-control customer-info" id="email" name="email" placeholder="Enter your email address" required>
+                                <label for="email" style="width:110px">Email:</label>
+                                <input type="email" class="form-control customer-info" id="email" name="email" value="{{ $data['bid_info']->customer_email }}" placeholder="Email address" required>
                             </div>
                         </div>
 
                         @if(!empty($data['bid_info']))
-                        <div class="col-sm-6 col-md-6 text-center">
-                            <div style="padding:10px 0 0 20px ">
-                                <strong>Status: </strong>
-                                @if($data['bid_info']->status === 1)
-                                Pending
-                                @elseif($data['bid_info']->status === 2)
-                                Declined
-                                @elseif($data['bid_info']->status === 3)
-                                Accepted
-                                @elseif($data['bid_info']->status === 4)
-                                Requested
-                                @else
-                                Unknown
-                                @endif
+                        <div class="col-sm-6 col-md-6">
+                            <div style="padding:20px 0 0 40px ">
+                                <div>Street: {{ $data['bid_info']->street}}</div>
+                                <div>City: {{ $data['bid_info']->city}}</div>
+                                <div>State: {{ $data['bid_info']->state}}</div>
+                                <div>Zip: {{ $data['bid_info']->zip}}</div>
                             </div>
                         </div>
                         @endif
@@ -246,7 +277,11 @@
                 if ($("input[type='checkbox']:checked").length == 0) {
                     // At least one checkbox is checked
                     e.preventDefault();
-                    alert("At least one service should be selected.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Wait!',
+                        text: 'Please select at least one option before submitting.',
+                    });
                     return false;
                 }
             });
@@ -265,11 +300,11 @@
                     maximumFractionDigits: 2
                 });
 
-                $('#subtotal').html('$' + formattedSubtotal);
+                $('#subtotal').html('&nbsp;$' + formattedSubtotal);
             }
 
             // populate customer data in form
-            document.querySelectorAll('.customer-info').forEach(input => {
+            /*document.querySelectorAll('.customer-info').forEach(input => {
                 if (input.value != '') {
                     return;
                 }
@@ -277,14 +312,15 @@
                 if (savedValue) {
                     input.value = savedValue;
                 }
-                // Add input listener to save changes
+               
                 input.addEventListener('input', () => {
                     localStorage.setItem(input.id, input.value);
                 });
-            });
+            });*/
 
         });
     </script>
+    <script src="{{ asset('sweetalert2@11.js') }}"></script>
 
 </body>
 

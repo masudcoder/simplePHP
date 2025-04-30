@@ -32,7 +32,8 @@
                                 <th style="width: 8%;">City</th>
                                 <th style="width: 8%;">State</th>
                                 <th style="width: 8%;">Zip</th>
-                                <th style="width: 8%;">Cust. Name</th>
+                                <th style="width: 8%;">F. Name</th>
+                                <th style="width: 8%;">L. Name</th>
                                 <th style="width: 8%;">Cust. Phone</th>
                                 <th style="width: 8%;">Cust. Email</th>
                                 <th style="width: 8%;">Est Cost</th>
@@ -48,7 +49,8 @@
                                 <td>{{ $bid->city }}</td>
                                 <td>{{ $bid->state }}</td>
                                 <td>{{ $bid->zip }}</td>
-                                <td>{{ $bid->customer_name }}</td>
+                                <td>{{ $bid->customer_first_name }}</td>
+                                <td>{{ $bid->customer_last_name }}</td>
                                 <td>{{ $bid->customer_phone }}</td>
                                 <td>{{ $bid->customer_email }}</td>
                                 <td>${{ $bid->total_price }}</td>
@@ -103,7 +105,8 @@
                                 <th>City</th>
                                 <th>State</th>
                                 <th>Zip</th>
-                                <th>Cust. Name</th>
+                                <th>F. Name</th>
+                                <th>L. Name</th>
                                 <th>Cust. Phone</th>
                                 <th>Cust. Email</th>
                                 <th>Est Cost</th>

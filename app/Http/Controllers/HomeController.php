@@ -37,8 +37,9 @@ class HomeController extends Controller
     {
         $data['bids'] = DB::table('bids')
             ->join('bid_details', 'bids.id', '=', 'bid_details.bid_id')
-            ->select('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.customer_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status', DB::raw('SUM(bid_details.qty * bid_details.unit_price) as total_price'))
-            ->groupBy('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.customer_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status')
+            ->select('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.customer_first_name', 'bids.customer_last_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status', DB::raw('SUM(bid_details.price) as total_price'))
+            ->groupBy('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.customer_first_name', 'bids.customer_last_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status')
+            ->where('is_deleted', 0)
             ->get();
 
         //$data['bids'] =  DB::Table('bids')->get();
@@ -61,16 +62,15 @@ class HomeController extends Controller
 
 
             $service_descriptions = $request->input('service_description');
-            $unit_prices = $request->input('unit_price');
-            $qtys = $request->input('qty');
+            $prices = $request->input('price');
 
+            // dd($prices);
 
             for ($i = 0; $i < count($service_descriptions); $i++) {
                 DB::table('bid_details')->insert([
                     'bid_id' => $bid_id,
-                    'qty' => (int) $qtys[$i],
                     'service_description' => $service_descriptions[$i],
-                    'unit_price' => number_format((float) $unit_prices[$i], 2, '.', ''),
+                    'price' => $prices[$i] ? number_format((float) $prices[$i], 2, '.', '') : null,
                 ]);
             }
 
@@ -110,26 +110,27 @@ class HomeController extends Controller
                     'city' => $request->input('city'),
                     'state' => $request->input('state'),
                     'zip' => $request->input('zip'),
-                    'customer_name' => $request->input('name'),
+                    'customer_first_name' => $request->input('customer_first_name'),
+                    'customer_last_name' => $request->input('customer_last_name'),
                     'customer_phone' => $request->input('phone'),
                     'customer_email' => $request->input('email')
                 ]);
 
             $service_descriptions = $request->input('service_description');
-            $unit_prices = $request->input('unit_price');
-            $qtys = $request->input('qty');
+            $prices = $request->input('price');
             $bid_row_ids = $request->input('bid_row_id');
 
+           // dd($prices);
+ 
             for ($i = 0; $i < count($service_descriptions); $i++) {
                 DB::table('bid_details')
                     ->where('id', $bid_row_ids[$i])
                     ->update([
-                        'qty' => (int) $qtys[$i],
                         'service_description' => $service_descriptions[$i],
-                        'unit_price' => number_format((float) $unit_prices[$i], 2, '.', ''),
+                        'price' => $prices[$i] ? number_format((float) $prices[$i], 2, '.', '') : null,
                     ]);
             }
-
+            
             // bid services selected
 
             if ($request->input('status') !== 1) {
@@ -147,8 +148,6 @@ class HomeController extends Controller
                     }
                 }
             }
-
-            
         }
         return redirect()->back()->with('success', 'Bid Updated successfully.');
     }
@@ -159,9 +158,15 @@ class HomeController extends Controller
         if ($request->isMethod('post')) {
 
             if ($request->input('id')) {
-                DB::table('bids')->where('id', $request->input('id'))->delete();
-                DB::table('bid_details')->where('bid_id', $request->input('id'))->delete();
-                DB::table('bid_selected_services')->where('bid_id', $request->input('id'))->delete();
+                DB::table('bids')->where('id', $request->input('id'))
+                    ->update(
+                        [
+                            'is_deleted' => 1,
+                        ]
+                    );
+
+              //DB::table('bid_details')->where('bid_id', $request->input('id'))->delete();
+              //DB::table('bid_selected_services')->where('bid_id', $request->input('id'))->delete();
             }
             return redirect('/manageBids')->with('success', 'Bid has been deleted successfully.');
         }

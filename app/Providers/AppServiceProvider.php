@@ -4,14 +4,14 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\Log;
 
-DB::listen(function ($query) {
-    Log::info("SQL: " . $query->sql);
-    Log::info("Bindings: " . implode(', ', $query->bindings));
-    Log::info("Time: " . $query->time . ' ms');
-});
+// DB::listen(function ($query) {
+//     Log::info("SQL: " . $query->sql);
+//     Log::info("Bindings: " . implode(', ', $query->bindings));
+//     Log::info("Time: " . $query->time . ' ms');
+// });
 
 class AppServiceProvider extends ServiceProvider
 {

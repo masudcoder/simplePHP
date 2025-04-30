@@ -26,45 +26,44 @@
 
                 <div class="box-body">
                     <div style="padding:15px 5px">
-                        Ref.ID: {{ str_pad($data['bid_info']->id, 6, '0', STR_PAD_LEFT) }}. &nbsp;&nbsp;{{ $data['bid_info']->street}} Address:{{ $data['bid_info']->street}} {{ $data['bid_info']->city}} {{ $data['bid_info']->state}} {{ $data['bid_info']->zip}}
-                        <br>Status: @if($data['bid_info']->status == 1)
-                        Pending
-                        @elseif($data['bid_info']->status == 2)
-                        Declined
-                        @elseif($data['bid_info']->status == 3)
-                        Accepted
-                        @elseif($data['bid_info']->status == 4)
-                        Requested
+                        Ref.ID: {{ str_pad($data['bid_info']->id, 6, '0', STR_PAD_LEFT) }}. &nbsp;&nbsp;
+                        <strong>Status: </strong>
+                        @if($data['bid_info']->status === 1)
+                        <span class="status-pending">Pending</span>
+                        @elseif($data['bid_info']->status === 2)
+                        <span class="status-declined">Declined</span>
+                        @elseif($data['bid_info']->status === 3)
+                        <span class="status-accepted">Accepted</span>
+                        @elseif($data['bid_info']->status === 4)
+                        <span class="status-requested">Requested</span>
                         @else
-                        Unknown
+                        <span class="status-pending">Unknown</span>
                         @endif
+                        <br>
+                        Street:{{ $data['bid_info']->street}} City: {{ $data['bid_info']->city}} State: {{ $data['bid_info']->state}} Zip: {{ $data['bid_info']->zip}}
                     </div>
                     <table class="table table-bordered table-striped" style="width: 100%;">
                         <thead>
                             <tr>
-                                <th style="width: 50%;">Product/Service</th>
-                                <th style="width: 15%;">Qty</th>
-                                <th style="width: 15%;">Unit Price</th>
+                                <th style="width: 80%;">Product/Service</th>
                                 <th style="width: 20%;">Total @php $total = 0; $subtotal = 0; @endphp</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($data['bid_services_data'] as $key => $service)
                             <tr>
-                                <td><input type="checkbox" disabled {{ $data['bid_info']->status == 1 || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} data-price="{{ $service->qty * $service->unit_price }}" class="chkboxService">
+                                <td><input type="checkbox" name="" disabled {{ $data['bid_info']->status == 1 || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} data-price="{{ $service->price ?? 0 }}" class="chkboxService">
                                     <label for="chkboxService_{{ $service->id}}"> {{ config('constants')[$key] }}</label><br>
-                                    {{ $service->service_description}}
+                                    {!! $service->service_description !!}
                                 </td>
-                                <td>{{ $service->qty}}</td>
-                                <td>{{ $service->unit_price}}</td>
                                 <td>
-                                    @php $total += $service->qty * $service->unit_price; @endphp
+                                    @php $total += $service->price; @endphp
                                     @php
                                     if(in_array($service->id, $data['selected_services'])) {
-                                    $subtotal += $service->qty * $service->unit_price;
+                                    $subtotal += $service->price;
                                     }
                                     @endphp
-                                    ${{ number_format($service->qty * $service->unit_price, 2, '.', ',') }}
+                                    ${{ number_format($service->price, 2, '.', ',') }}
                                 </td>
                             </tr>
                             @endforeach
@@ -73,22 +72,22 @@
                     </table>
                     <table style="width: 100%;">
                         <tr>
-                            <td style="width: 50%;"></td>
-                            <td style="width: 15%;"></td>
-                            <td style="width: 15%;">Total:</td>
-                            <td style="width: 20%;">${{ number_format($total, 2, '.', ',') }}</td>
+                            <td style="width: 80%;" class="text-right">Grand Total:</td>
+                            <td style="width: 20%;">&nbsp; ${{ number_format($total, 2, '.', ',') }}</td>
                         </tr>
                         <tr>
-                            <td style="width: 50%;"></td>
-                            <td style="width: 15%;"></td>
-                            <td style="width: 15%;">Sub Total:</td>
-                            <td style="width: 20%;" id="subtotal">${{ number_format($subtotal, 2, '.', ',') }}</td>
+                            <td style="width: 80%;" class="text-right">Sub Total:</td>
+                            <td style="width: 20%;" id="subtotal">&nbsp; ${{ number_format($subtotal, 2, '.', ',') }}</td>
                         </tr>
                     </table>
 
-                    <div>
-                        <strong>Name: </strong>{{ $data['bid_info']->customer_name}}, <strong>Phone: </strong> {{ $data['bid_info']->customer_phone}}, <strong>Email: </strong> {{ $data['bid_info']->customer_email}}
+
+                    <div style="padding-bottom:100px">
+                        @if($data['bid_info']->status != 1)
+                        <strong>First Name: </strong>{{ $data['bid_info']->customer_first_name}}, <strong>Last Name: </strong>{{ $data['bid_info']->customer_last_name}}, <strong>Phone: </strong> {{ $data['bid_info']->customer_phone}}, <strong>Email: </strong> {{ $data['bid_info']->customer_email}}
+                        @endif
                     </div>
+
                 </div>
             </div>
 
@@ -103,25 +102,22 @@
 <script>
     $(document).ready(function() {
         calculateSubTotal();
-        
+
         function calculateSubTotal() {
             let subtotal = 0;
             const checkboxes = document.querySelectorAll('.chkboxService');
             checkboxes.forEach(checkbox => {
-                console.log('11');
                 if (checkbox.checked) {
-                   
                     subtotal += parseFloat(checkbox.dataset.price);
                 }
             });
-            console.log(subtotal);
 
             const formattedSubtotal = subtotal.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
 
-            $('#subtotal').html('$' + formattedSubtotal);
+            $('#subtotal').html('&nbsp;$' + formattedSubtotal);
         }
     });
 </script>

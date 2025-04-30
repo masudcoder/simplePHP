@@ -6,9 +6,6 @@ use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\DB;
 
-use App\Mail\WelcomeMail;
-use Illuminate\Support\Facades\Mail;
-
 class LandingPageController extends Controller
 {
 
@@ -27,7 +24,10 @@ class LandingPageController extends Controller
                 $ref_id = (int)$request->ref_id;
             }
 
-            $data['bid_info'] = DB::Table('bids')->where('id', $ref_id)->first();
+            $data['bid_info'] = DB::Table('bids')
+            ->where('id', $ref_id)
+            ->where('is_deleted', 0)
+            ->first();
 
             //retrieve services data, so far 5 services.
             //retrieve service id that already submitted by customer
@@ -55,7 +55,8 @@ class LandingPageController extends Controller
             DB::Table('bids')->where('id', $request->id)
                 ->update(
                     [
-                        'customer_name' => $request->name,
+                        'customer_first_name' => $request->customer_first_name,
+                        'customer_last_name' => $request->customer_last_name,
                         'customer_phone' => $request->phone,
                         'customer_email' => $request->email,
                         'status' => $request->action
@@ -92,9 +93,8 @@ class LandingPageController extends Controller
         return redirect('/');
     }
 
-    public function testMail()
+    public function generateMailBody()
     {
-        mail("zamanmasudcoder@gmail.co","Tree Care", "tree care");
+        $msg = "You\' have Received a New Request! New Bid has been submitted";
     }
-
 }

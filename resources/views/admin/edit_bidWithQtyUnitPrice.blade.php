@@ -150,8 +150,10 @@
                                 <thead class="table-light table-bordered">
                                     <tr>
                                         <th style="width:15%">Products/Services</th>
-                                        <th style="width:65%">Description</th>
-                                        <th style="width:20%">Price </th>
+                                        <th style="width:35%">Description</th>
+                                        <th style="width:20%">Qty</th>
+                                        <th style="width:20%">Unit Price </th>
+                                        <th style="width:10%">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -159,46 +161,43 @@
                                     <tr>
                                         <td>
                                             @if($data['bid_info']->status == 1)
-                                            <input type="checkbox" disabled checked="checked" name="services[]" value="{{ $service->id}}" data-price="{{ $service->price ?? 0 }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
+                                            <input type="checkbox" disabled checked="checked" name="services[]" value="{{ $service->id}}" data-price="{{ $service->qty * $service->unit_price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
                                             @else
-                                            <input type="checkbox" {{ empty($data['selected_services']) || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} name="services[]" value="{{ $service->id}}" data-price="{{ $service->price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
+                                            <input type="checkbox" {{ empty($data['selected_services']) || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} name="services[]" value="{{ $service->id}}" data-price="{{ $service->qty * $service->unit_price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
                                             @endif
+
                                             <label for="chkboxService_{{ $service->id}}"> {{ config('constants')[$key] }}</label>
                                             <input type="hidden" name="bid_row_id[]" value="{{ $service->id}}">
                                         </td>
-
-                                        <td><textarea class="textarea service-description" name="service_description[]">{!! $service->service_description !!}</textarea></td>
-                                        <td>
-                                            <div class="input-price"><input type="text" value="{{ $service->price}}" class="form-control price" name="price[]"></div>
-                                            @php $total += $service->price; @endphp
+                                        <td><textarea class="form-control" rows="1" name="service_description[]" required>{{ $service->service_description}}</textarea></td>
+                                        <td><input type="text" value="{{ $service->qty}}" class="form-control qty" name="qty[]" required></td>
+                                        <td><input type="text" value="{{ $service->unit_price}}" class="form-control unit_price" name="unit_price[]" required></td>
+                                        <td class="row-total">
+                                            @php $total += $service->qty * $service->unit_price; @endphp
                                             @php
                                             if($data['bid_info']->status == 1 || in_array($service->id, $data['selected_services'])) {
-                                            $subtotal += $service->price;
+                                            $subtotal += $service->qty * $service->unit_price;
                                             }
                                             @endphp
+                                            ${{ number_format($service->qty * $service->unit_price, 2, '.', ',') }}
                                         </td>
-
-                                        <!-- <td><textarea class="form-control" rows="1" name="service_description[]">{{ $service->service_description}}</textarea></td> -->
-                                        <!-- <td>
-                                            <input type="text" value="{{ $service->price}}" class="form-control price" name="price[]">
-                                           
-                                        </td> -->
                                     </tr>
                                     @endforeach
                                     <tr>
-                                        <td></td>
-                                        <td class="text-right"><b>Grand Total</b></td>
+                                        <td colspan="3"></td>
+                                        <td><b>Grand Total</b></td>
                                         <td class="grand-total">${{ number_format($total, 2, '.', ',') }}</td>
                                     </tr>
                                     @if($data['bid_info']->status != 1)
                                     <tr>
-                                        <td></td>
-                                        <td class="text-right"><b>Sub Total</b></td>
+                                        <td colspan="3"></td>
+                                        <td><b>Sub Total</b></td>
                                         <td class="subtotal" id="subtotal">
                                             ${{ number_format($subtotal, 2, '.', ',') }}
                                         </td>
                                     </tr>
                                     @endif
+
                                 </tbody>
                             </table>
                         </div>
@@ -250,35 +249,52 @@
 <script>
     $(document).ready(function() {
 
-        $(".textarea").wysihtml5();
-        
-        // On Change value
-        $('.price').on('change', function() {
-            let grandTotal = 0;
-            $('#serviceTable tbody tr').each(function() {
-                grandTotal += parseFloat($(this).find('.price').val()) || 0;
-            });
-
-            $('#serviceTable tbody tr td.grand-total').text(`$${grandTotal.toFixed(2)}`);
-            calculateSubTotal();
-        });
-
-        //calculateSubTotal();
+        calculateSubTotal();
         $('.chkboxService').on('change', function() {
             calculateSubTotal();
         });
+        // On Change value
+        $('.qty, .unit_price').on('change', function() {
+            calculateTotal();
+            calculateSubTotal();
+        });
+
+
+
+        function calculateTotal() {
+            //alert('calculateTotal');
+            let grandTotal = 0;
+            let subTotal = 0;
+            $('#serviceTable tbody tr').each(function() {
+                // Skip the last row (Total row)
+                if (!$(this).find('.qty').length) return;
+
+                grandTotal += calculateRowTotal($(this));
+
+            });
+            // Set grand total in the last row
+            $('#serviceTable tbody tr td.grand-total').text(`$${grandTotal.toFixed(2)}`);
+        }
+
+        function calculateRowTotal(row) {
+            let qty = parseFloat(row.find('.qty').val()) || 0;
+            let unitPrice = parseFloat(row.find('.unit_price').val()) || 0;
+            let total = qty * unitPrice;
+            row.find('.row-total').text(`$${total.toFixed(2)}`);
+            return total;
+        }
 
 
         function calculateSubTotal() {
-           
             console.log(`calculateSubTotal`);
-
             let subtotal = 0;
             $("#serviceTable tbody tr").each(function(index) {
                 const checkbox = $(this).find(".chkboxService");
                 if (checkbox.length && checkbox.prop("checked")) {
-                    let price = parseFloat($(this).find('.price').val()) || 0;
-                    subtotal +=  price;
+                    let qty = parseFloat($(this).find('.qty').val()) || 0;
+                    let unitPrice = parseFloat($(this).find('.unit_price').val()) || 0;
+                    subtotal += qty * unitPrice;
+
                 }
             });
 

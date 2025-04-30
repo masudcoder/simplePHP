@@ -21,24 +21,11 @@
             <!-- general form elements -->
             <div class="box box-primary">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Bid Update &nbsp;&nbsp;&nbsp;
-                        <strong>Ref ID:</strong> {{ str_pad($data['bid_info']->id, 6, '0', STR_PAD_LEFT) }} &nbsp;&nbsp;
-                        <strong>Status:</strong> @if($data['bid_info']->status == 1)
-                        Pending
-                        @elseif($data['bid_info']->status == 2)
-                        Declined
-                        @elseif($data['bid_info']->status == 3)
-                        Accepted
-                        @elseif($data['bid_info']->status == 4)
-                        Requested
-                        @else
-                        Unknown
-                        @endif
-                    </h3>
+                    <h3 class="box-title">Bid Creation &nbsp;&nbsp;&nbsp;<strong>Ref ID:</strong> {{ $data['next_ref_id'] }} </h3>
                 </div>
                 <!-- /.box-header -->
                 <!-- form start -->
-                <form method="POST" action="{{ url('/bid/updateBid')}}">
+                <form method="POST" action="{{ url('/createBid')}}">
                     <div class="box-body">
                         <div class="form-group">
                             <div class="box-body">
@@ -51,7 +38,6 @@
                                             id="street"
                                             name="street"
                                             placeholder="Street"
-                                            value="{{ $data['bid_info']->street }}"
                                             required>
                                     </div>
                                     <label class="col-sm-2 col-md-1 text-right">City</label>
@@ -62,7 +48,6 @@
                                             id="city"
                                             name="city"
                                             placeholder="city"
-                                            value="{{ $data['bid_info']->city }}"
                                             required>
                                     </div>
 
@@ -127,7 +112,6 @@
                                             <option value="Wisconsin">Wisconsin</option>
                                             <option value="Wyoming">Wyoming</option>
                                         </select>
-
                                     </div>
                                     <label class="col-sm-4 col-md-1 text-right">Zip</label>
                                     <div class="col-sm-4 col-md-2">
@@ -137,7 +121,6 @@
                                             id="zip"
                                             name="zip"
                                             placeholder="zip"
-                                            value="{{ $data['bid_info']->zip }}"
                                             required>
                                     </div>
                                 </div>
@@ -145,96 +128,67 @@
                         </div>
 
                         <div class="form-group">
-                            @php $total = 0; $subtotal = 0; @endphp
                             <table class="table" id="serviceTable">
                                 <thead class="table-light table-bordered">
                                     <tr>
                                         <th style="width:15%">Products/Services</th>
-                                        <th style="width:65%">Description</th>
-                                        <th style="width:20%">Price </th>
+                                        <th style="width:35%">Description</th>
+                                        <th style="width:20%">Qty</th>
+                                        <th style="width:20%">Unit Price </th>
+                                        <th style="width:10%">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($data['bid_services_data'] as $key => $service)
                                     <tr>
-                                        <td>
-                                            @if($data['bid_info']->status == 1)
-                                            <input type="checkbox" disabled checked="checked" name="services[]" value="{{ $service->id}}" data-price="{{ $service->price ?? 0 }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
-                                            @else
-                                            <input type="checkbox" {{ empty($data['selected_services']) || in_array($service->id, $data['selected_services']) ? 'checked="checked"' : '' }} name="services[]" value="{{ $service->id}}" data-price="{{ $service->price }}" id="chkboxService_{{ $service->id}}" class="chkboxService">
-                                            @endif
-                                            <label for="chkboxService_{{ $service->id}}"> {{ config('constants')[$key] }}</label>
-                                            <input type="hidden" name="bid_row_id[]" value="{{ $service->id}}">
-                                        </td>
-
-                                        <td><textarea class="textarea service-description" name="service_description[]">{!! $service->service_description !!}</textarea></td>
-                                        <td>
-                                            <div class="input-price"><input type="text" value="{{ $service->price}}" class="form-control price" name="price[]"></div>
-                                            @php $total += $service->price; @endphp
-                                            @php
-                                            if($data['bid_info']->status == 1 || in_array($service->id, $data['selected_services'])) {
-                                            $subtotal += $service->price;
-                                            }
-                                            @endphp
-                                        </td>
-
-                                        <!-- <td><textarea class="form-control" rows="1" name="service_description[]">{{ $service->service_description}}</textarea></td> -->
-                                        <!-- <td>
-                                            <input type="text" value="{{ $service->price}}" class="form-control price" name="price[]">
-                                           
-                                        </td> -->
+                                        <td>{{ config('constants')[0] }}</td>
+                                        <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
+                                        <td><input type="text" class="form-control qty" name="qty[]" required></td>
+                                        <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
+                                        <td class="row-total">$0.00</td>
                                     </tr>
-                                    @endforeach
                                     <tr>
-                                        <td></td>
-                                        <td class="text-right"><b>Grand Total</b></td>
-                                        <td class="grand-total">${{ number_format($total, 2, '.', ',') }}</td>
+                                        <td>{{ config('constants')[1] }}</td>
+                                        <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
+                                        <td><input type="text" class="form-control qty" name="qty[]" required></td>
+                                        <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
+                                        <td class="row-total">$0.00</td>
                                     </tr>
-                                    @if($data['bid_info']->status != 1)
                                     <tr>
-                                        <td></td>
-                                        <td class="text-right"><b>Sub Total</b></td>
-                                        <td class="subtotal" id="subtotal">
-                                            ${{ number_format($subtotal, 2, '.', ',') }}
-                                        </td>
+                                        <td>{{ config('constants')[2] }}</td>
+                                        <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
+                                        <td><input type="text" class="form-control qty" name="qty[]" required></td>
+                                        <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
+                                        <td class="row-total">$0.00</td>
                                     </tr>
-                                    @endif
+                                    <tr>
+                                        <td>{{ config('constants')[3] }}</td>
+                                        <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
+                                        <td><input type="text" class="form-control qty" name="qty[]" required></td>
+                                        <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
+                                        <td class="row-total">$0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ config('constants')[4] }}</td>
+                                        <td><textarea class="form-control" rows="1" name="service_description[]" required></textarea></td>
+                                        <td><input type="text" class="form-control qty" name="qty[]" required></td>
+                                        <td><input type="text" class="form-control unit_price" name="unit_price[]" required></td>
+                                        <td class="row-total">$0.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"></td>
+                                        <td><b>Grand Total</b></td>
+                                        <td class="grand-total">$0.00</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
-
-                        @if($data['bid_info']->status != 1)
-                        <div class="form-group">
-                            <div class="box-body">
-                                <div class="row">
-                                    <div class="col-sm-12 col-md-12">
-                                        <table cellspacing="2" cellpadding="2">
-                                            <tr>
-                                                <td style="padding:0 15px">First Name </td>
-                                                <td style="padding:0 15px"><input type="text" class="form-control" name="customer_first_name" value="{{ $data['bid_info']->customer_first_name }}"></td>
-                                                <td style="padding:0 15px">Last Name </td>
-                                                <td style="padding:0 15px"><input type="text" class="form-control" name="customer_last_name" value="{{ $data['bid_info']->customer_last_name }}"></td>
-                                                <td style="padding:0 15px">Phone</td>
-                                                <td style="padding:0 15px"><input type="text" class="form-control" name="phone" value="{{ $data['bid_info']->customer_phone }}"></td>
-                                                <td style="padding:0 15px">Email</td>
-                                                <td style="padding:0 15px"><input type="text" class="form-control" name="email" value="{{ $data['bid_info']->customer_email }}"></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        @endif
 
                     </div>
                     <!-- /.box-body -->
 
                     <div class="box-footer">
                         @csrf
-                        <input type="hidden" name="id" value="{{ $data['bid_info']->id}}">
-                        <input type="hidden" name="status" value="{{ $data['bid_info']->status}}">
-                        <button type="submit" class="btn btn-primary">UPDATE</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                 </form>
             </div>
@@ -249,71 +203,36 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-
-        $(".textarea").wysihtml5();
-        
         // On Change value
-        $('.price').on('change', function() {
+        $('.qty, .unit_price').on('change', function() {
+            calculateGrandTotal();
+            // const row = $(this).closest('tr');
+            // const qty = parseFloat(row.find('.qty').val().replace(/[^0-9.]/g, '')) || 0;
+            // const unit_price = parseFloat(row.find('.unit_price').val().replace(/[^0-9.]/g, '')) || 0;
+            // const total = qty * unit_price;
+            // row.find('.row-total').html('$' + total.toFixed(2));
+
+        });
+
+        function calculateGrandTotal() {
             let grandTotal = 0;
             $('#serviceTable tbody tr').each(function() {
-                grandTotal += parseFloat($(this).find('.price').val()) || 0;
+                // Skip the last row (Total row)
+                if (!$(this).find('.qty').length) return;
+
+                grandTotal += calculateRowTotal($(this));
             });
-
-            $('#serviceTable tbody tr td.grand-total').text(`$${grandTotal.toFixed(2)}`);
-            calculateSubTotal();
-        });
-
-        //calculateSubTotal();
-        $('.chkboxService').on('change', function() {
-            calculateSubTotal();
-        });
-
-
-        function calculateSubTotal() {
-           
-            console.log(`calculateSubTotal`);
-
-            let subtotal = 0;
-            $("#serviceTable tbody tr").each(function(index) {
-                const checkbox = $(this).find(".chkboxService");
-                if (checkbox.length && checkbox.prop("checked")) {
-                    let price = parseFloat($(this).find('.price').val()) || 0;
-                    subtotal +=  price;
-                }
-            });
-
-            const formattedSubtotal = subtotal.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-
-            $('#subtotal').text('$' + formattedSubtotal);
-
+            // Set grand total in the last row
+            $('#serviceTable tbody tr:last .grand-total').text(`$${grandTotal.toFixed(2)}`);
         }
 
-        // function calculateSubTotalOnLoad() {
-        //     //alert('calculateSubTotalOnLoad');
-        //     let subtotal = 0;
-        //     const checkboxes = document.querySelectorAll('.chkboxService');
-
-        //     checkboxes.forEach(checkbox => {
-        //         if (checkbox.checked) {
-
-        //             //console.log(parseFloat(checkbox.dataset.price));
-        //             subtotal += parseFloat(checkbox.dataset.price);
-        //         }
-        //     });
-
-        //     const formattedSubtotal = subtotal.toLocaleString('en-US', {
-        //         minimumFractionDigits: 2,
-        //         maximumFractionDigits: 2
-        //     });
-
-        //     $('#subtotal').text('$' + formattedSubtotal);
-        // }
-
-        // make state dropdown selected.
-        document.getElementById("state").value = "<?php echo $data['bid_info']->state ?>";
+        function calculateRowTotal(row) {
+            let qty = parseFloat(row.find('.qty').val()) || 0;
+            let unitPrice = parseFloat(row.find('.unit_price').val()) || 0;
+            let total = qty * unitPrice;
+            row.find('.row-total').text(`$${total.toFixed(2)}`);
+            return total;
+        }
 
     });
 </script>
