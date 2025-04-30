@@ -40,7 +40,7 @@
                         <span class="status-pending">Unknown</span>
                         @endif
                         <br>
-                        Street:{{ $data['bid_info']->street}} City: {{ $data['bid_info']->city}} State: {{ $data['bid_info']->state}} Zip: {{ $data['bid_info']->zip}}
+                        Street:{{ $data['bid_info']->street}}, City: {{ $data['bid_info']->city}}, State: {{ $data['bid_info']->state}}, Zip: {{ $data['bid_info']->zip}}
                     </div>
                     <table class="table table-bordered table-striped" style="width: 100%;">
                         <thead>
