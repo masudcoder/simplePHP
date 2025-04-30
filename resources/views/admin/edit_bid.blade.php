@@ -151,7 +151,7 @@
                                     <tr>
                                         <th style="width:15%">Products/Services</th>
                                         <th style="width:65%">Description</th>
-                                        <th style="width:20%">Price </th>
+                                        <th style="width:20%">Cost </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -251,7 +251,7 @@
     $(document).ready(function() {
 
         $(".textarea").wysihtml5();
-        
+
         // On Change value
         $('.price').on('change', function() {
             let grandTotal = 0;

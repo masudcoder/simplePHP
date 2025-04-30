@@ -133,7 +133,7 @@
                                     <tr>
                                         <th style="width:15%">Products/Services</th>
                                         <th style="width:65%">Description</th>
-                                        <th style="width:20%">Total</th>
+                                        <th style="width:20%">Cost</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -211,7 +211,7 @@
             $('#serviceTable tbody tr').each(function() {
                 grandTotal += parseFloat($(this).find('.price').val()) || 0;
             });
-            
+
             $('#serviceTable tbody tr td.grand-total').text(`$${grandTotal.toFixed(2)}`);
         });
 
