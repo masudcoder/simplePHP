@@ -19,7 +19,7 @@ class GeneralData extends Model
 
     public function getNextRefID()
     {
-        $max_id = DB::table('bids')->orderBy('id', 'DESC')->first()->id;
+        $max_id = DB::table('bids')->orderBy('id', 'DESC')->first()->id ?? 0;
         return str_pad(++$max_id, 6, '0', STR_PAD_LEFT);
     }
 }

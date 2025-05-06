@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\User;
+
 class LoginController extends Controller
 {
     /*
@@ -37,4 +42,26 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
     }
+
+    
+
+    public function login(Request $request)
+    {
+    
+        $request->validate([
+            'pin' => 'required|string'
+        ]);
+
+        $user = User::where('pin', $request->pin)->first();
+        if ($user) {
+            Auth::login($user); // login without password
+            return redirect()->intended('home'); // or your desired route
+        }
+        
+        return back()->withErrors([
+            'pin' => 'Invalid PIN.',
+        ])->onlyInput('pin');
+    }
+    
+
 }

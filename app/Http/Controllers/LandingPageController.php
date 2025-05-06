@@ -25,9 +25,9 @@ class LandingPageController extends Controller
             }
 
             $data['bid_info'] = DB::Table('bids')
-            ->where('id', $ref_id)
-            ->where('is_deleted', 0)
-            ->first();
+                ->where('id', $ref_id)
+                ->where('is_deleted', 0)
+                ->first();
 
             //retrieve services data, so far 5 services.
             //retrieve service id that already submitted by customer
@@ -40,8 +40,6 @@ class LandingPageController extends Controller
                 }
                 $data['selected_services'] = $selected_services;
             }
-
-            
         }
         return view('welcome', ['data' => $data]);
     }
@@ -76,13 +74,19 @@ class LandingPageController extends Controller
                 );
             }
 
+            $this->sendMail([
+                'customer_first_name' => $request->customer_first_name,
+                'customer_last_name' => $request->customer_last_name,
+                'customer_phone' => $request->phone,
+                'customer_email' => $request->email,
+                'status' => $request->action
+            ]);
             //when accepted
             if ($request->action == 3) {
                 // In admin panel it should show something more.
             }
 
             if ($request->action == 3 || $request->action == 4) {
-                //mail("zamanmasudcoder@gmail.com","My subject",  $this->generateMailBody());
                 return redirect('/')->with('success', 'Thank you, We will contact you as soon as possible.');
             }
 
@@ -93,8 +97,61 @@ class LandingPageController extends Controller
         return redirect('/');
     }
 
-    public function generateMailBody()
+    public function sendMail($customer)
     {
-        $msg = "You\' have Received a New Request! New Bid has been submitted";
+        $to = "info@gradeatree.com";
+        $subject = "Bid submitted";
+
+        $status = "";
+        if ($customer['status'] == 2) {
+            $status = "Declined";
+        } else if ($customer['status'] == 3) {
+            $status = "Accepted";
+        } else if ($customer['status'] == 4) {
+            $status = "Requested";
+        }
+
+       
+
+        $message = "
+        <html>
+        <head>
+        <title>Bid submitted</title>
+        </head>
+        <body>
+        <p>Dear Admin,</p>
+        <p>A new bid has been placed on your site.</p>
+        <p><b>Status:</b>: $status</p>
+        <table>
+       
+        <tr>
+        <td><b>First Name:</b> ". $customer["customer_first_name"] ."</td>
+        </tr>
+        <tr>
+        <td><b>Last Name:</b> ". $customer["customer_last_name"] ."</td>
+        </tr>
+        <tr>
+        <td><b>Phone:</b> ". $customer["customer_phone"] ."</td>
+        </tr>
+        <tr>
+        <td><b>Email:</b> ". $customer["customer_email"] ."</td>
+        </tr>
+
+        <tr>
+        <td><br><br>Thank you.</td>
+        </tr>
+        </table>
+        </body>
+        </html>
+        ";
+
+        // Always set content-type when sending HTML email
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+        // More headers
+        $headers .= 'From: <no.reply@gradeatree.com>' . "\r\n";
+
+        mail($to, $subject, $message, $headers);
     }
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Grade A Tree Care</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap3.3.7.min.css') }}">
     <style>
         body {
             padding-top: 50px;
@@ -253,8 +253,8 @@
         </div>
     </footer>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{{ asset('jquery.min.js') }}"></script>
+    <script src="{{ asset('bootstrap/js/bootstrap3.3.7.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {

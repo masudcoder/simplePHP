@@ -2,6 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
+use Illuminate\Support\Facades\Mail;
+
+Route::get('/send-test-email', function () {
+    Mail::raw('This is a test email from production.', function ($message) {
+        $message->to('enggmasud1983@gmail.com')
+                ->subject('Test Email');
+    });
+    return 'Email sent!';
+});
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
