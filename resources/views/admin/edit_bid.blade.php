@@ -145,6 +145,24 @@
                         </div>
 
                         <div class="form-group">
+                            <div class="box-body">
+                                <div class="row">
+                                    <label class="col-sm-4 col-md-1">Estimator</label>
+                                    <div class="col-sm-4 col-md-2">
+                                        <select name="estimator" id="estimator" class="form-control">
+                                            <option value="">--Select Estimator--</option>
+                                            <option @if($data['bid_info']->estimator == "Johnny Trueblood") selected @endif value="Johnny Trueblood">Johnny Trueblood</option>
+                                            <option @if($data['bid_info']->estimator == "Jesse Swena") selected @endif value="Jesse Swena">Jesse Swena</option>
+                                            <option @if($data['bid_info']->estimator == "Joseph Flucke") selected @endif value="Joseph Flucke">Joseph Flucke</option>
+                                            <option @if($data['bid_info']->estimator == "Coby Garrett") selected @endif value="Coby Garrett">Coby Garrett</option>
+                                            <option @if($data['bid_info']->estimator == "Phil Giordano") selected @endif value="Phil Giordano">Phil Giordano</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             @php $total = 0; $subtotal = 0; @endphp
                             <table class="table" id="serviceTable">
                                 <thead class="table-light table-bordered">

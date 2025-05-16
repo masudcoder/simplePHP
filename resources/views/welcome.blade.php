@@ -76,7 +76,7 @@
 
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
-                <div class="company-name text-center">Grade A Tree Care</div>
+                <div class="company-name text-center">Grade-A Tree Care</div>
             </div>
         </div>
 

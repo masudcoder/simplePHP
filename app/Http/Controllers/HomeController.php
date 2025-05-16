@@ -37,8 +37,8 @@ class HomeController extends Controller
     {
         $data['bids'] = DB::table('bids')
             ->join('bid_details', 'bids.id', '=', 'bid_details.bid_id')
-            ->select('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.customer_first_name', 'bids.customer_last_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status', DB::raw('SUM(bid_details.price) as total_price'))
-            ->groupBy('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.customer_first_name', 'bids.customer_last_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status')
+            ->select('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.estimator','bids.customer_first_name', 'bids.customer_last_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status', DB::raw('SUM(bid_details.price) as total_price'))
+            ->groupBy('bids.id', 'bids.street', 'bids.city', 'bids.state', 'bids.zip', 'bids.estimator', 'bids.customer_first_name', 'bids.customer_last_name', 'bids.customer_phone', 'bids.customer_email', 'bids.status')
             ->where('is_deleted', 0)
             ->get();
 
@@ -57,7 +57,8 @@ class HomeController extends Controller
                 'street' => $request->input('street'),
                 'city' => $request->input('city'),
                 'state' => $request->input('state'),
-                'zip' => $request->input('zip')
+                'zip' => $request->input('zip'),
+                'estimator' => $request->input('estimator')
             ]);
 
 
@@ -110,6 +111,7 @@ class HomeController extends Controller
                     'city' => $request->input('city'),
                     'state' => $request->input('state'),
                     'zip' => $request->input('zip'),
+                    'estimator' => $request->input('estimator'),
                     'customer_first_name' => $request->input('customer_first_name'),
                     'customer_last_name' => $request->input('customer_last_name'),
                     'customer_phone' => $request->input('phone'),

@@ -128,6 +128,24 @@
                         </div>
 
                         <div class="form-group">
+                            <div class="box-body">
+                                <div class="row">
+                                    <label class="col-sm-4 col-md-1">Estimator</label>
+                                    <div class="col-sm-4 col-md-2">
+                                        <select name="estimator" id="estimator" class="form-control">
+                                            <option value="">--Select Estimator--</option>
+                                            <option value="Johnny Trueblood">Johnny Trueblood</option>
+                                            <option value="Jesse Swena">Jesse Swena</option>
+                                            <option value="Joseph Flucke">Joseph Flucke</option>
+                                            <option value="Coby Garrett">Coby Garrett</option>
+                                            <option value="Phil Giordano">Phil Giordano</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <table class="table" id="serviceTable">
                                 <thead class="table-light table-bordered">
                                     <tr>

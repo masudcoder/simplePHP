@@ -27,18 +27,19 @@
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th style="width: 8%;">Ref ID</th>
+                                <th style="width: 7%;">Ref ID</th>
                                 <th style="width: 8%;">Street</th>
                                 <th style="width: 8%;">City</th>
-                                <th style="width: 8%;">State</th>
-                                <th style="width: 8%;">Zip</th>
+                                <th style="width: 7%;">State</th>
+                                <th style="width: 7%;">Zip</th>
+                                <th style="width: 7%;">Estimator</th>
                                 <th style="width: 8%;">F. Name</th>
                                 <th style="width: 8%;">L. Name</th>
-                                <th style="width: 8%;">Cust. Phone</th>
+                                <th style="width: 7%;">Cust. Phone</th>
                                 <th style="width: 8%;">Cust. Email</th>
-                                <th style="width: 8%;">Est Cost</th>
-                                <th style="width: 8%;">Status</th>
-                                <th style="width: 12%;">Action</th>
+                                <th style="width: 7%;">Est Cost</th>
+                                <th style="width: 7%;">Status</th>
+                                <th style="width: 11%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,6 +50,7 @@
                                 <td>{{ $bid->city }}</td>
                                 <td>{{ $bid->state }}</td>
                                 <td>{{ $bid->zip }}</td>
+                                <td>{{ $bid->estimator }}</td>
                                 <td>{{ $bid->customer_first_name }}</td>
                                 <td>{{ $bid->customer_last_name }}</td>
                                 <td>{{ $bid->customer_phone }}</td>
@@ -105,6 +107,7 @@
                                 <th>City</th>
                                 <th>State</th>
                                 <th>Zip</th>
+                                <th>Estimator</th>
                                 <th>F. Name</th>
                                 <th>L. Name</th>
                                 <th>Cust. Phone</th>
@@ -140,7 +143,10 @@
 
 <script>
     $(function() {
-        $("#example1").DataTable();
+        //$("#example1").DataTable();
+        $('#example1').DataTable({
+        pageLength: 50
+    });
 
     });
 
