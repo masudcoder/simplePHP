@@ -79,7 +79,8 @@ class LandingPageController extends Controller
                 'customer_last_name' => $request->customer_last_name,
                 'customer_phone' => $request->phone,
                 'customer_email' => $request->email,
-                'status' => $request->action
+                'status' => $request->action,
+                'reference_id' => str_pad($request->id, 6, '0', STR_PAD_LEFT)
             ]);
             //when accepted
             if ($request->action == 3) {
@@ -99,9 +100,10 @@ class LandingPageController extends Controller
 
     public function sendMail($customer)
     {
-        $to = "info@gradeatree.com";
-        $subject = "Bid submitted";
-
+        //$to = "info@gradeatree.com";
+        $to = "enggmasud1983@gmail.com";
+        $subject = "Bid submitted, Reference ID - " . $customer['reference_id'];
+        
         $status = "";
         if ($customer['status'] == 2) {
             $status = "Declined";
