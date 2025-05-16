@@ -100,8 +100,7 @@ class LandingPageController extends Controller
 
     public function sendMail($customer)
     {
-        //$to = "info@gradeatree.com";
-        $to = "enggmasud1983@gmail.com";
+        $to = "info@gradeatree.com";
         $subject = "Bid submitted, Reference ID - " . $customer['reference_id'];
         
         $status = "";
